@@ -44,6 +44,7 @@
                 :routePath="routePath"
                 :operation="operation"
                 @submit="confirmTransaction"
+                :acceptText="trnsl('content.save')"
             />
         </Modal>
         

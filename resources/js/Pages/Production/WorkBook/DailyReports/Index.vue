@@ -95,7 +95,6 @@
         </template>
 
 
-
         <!-- MODAL -->
         <!-- <Modal
             :show="modal"
@@ -256,22 +255,22 @@
     }
 
     const confirmTransaction = ( params ) => {
-        console.log(params)
         if (params[1]==='store'){
             if (params[0]==1){
-                successMessage(trnsl('messages.recordSaved'))
+                // successMessage(trnsl('messages.recordSaved'))
             } else {
-                errorMessage(trnsl('messages.recordNoSaved'))
+                // errorMessage(trnsl('messages.recordNoSaved'))
             } 
         } else if ((params[1]==='update')||(params[1]==='updateWithFile')) {
             if (params[0]==1){
-                successMessage(trnsl('messages.recordUpdated')) 
+                // successMessage(trnsl('messages.recordUpdated')) 
                 showEditForm.value = false
             } else {
-                errorMessage(trnsl('messages.recordNoUpdated'))
+                // errorMessage(trnsl('messages.recordNoUpdated'))
             } 
         } else {
             showNewForm.value = false
+            formNew.reset()
         }
     }
 

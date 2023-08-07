@@ -214,8 +214,9 @@
     import Checkbox from '@/Components/Checkbox.vue'
     import TextArea from '@/Components/TextArea.vue'
     import SelectDynamic from '@/Components/SelectDynamic.vue'
+    import { successMessage, errorMessage } from '@/Helpers/helper'
+    import { trnsl } from '@/Lang/languages';
     import { ref } from 'vue'
-    import { router } from '@inertiajs/vue3'
 
     const props = defineProps({
         fields: Array,
@@ -224,7 +225,7 @@
         routePath: String,
         operation: String,
         style: String,
-        acceptText: String
+        acceptText: String,
     })
 
     const emit = defineEmits([
@@ -241,10 +242,12 @@
             props.form.post(route(props.routePath),{
                 onSuccess: () => { 
                     status = 1
+                    successMessage(trnsl('messages.recordSaved'))
                     emit('submit',[status, props.operation])
                 },
                 onError: (errors) => {
                     status = 0
+                    errorMessage(trnsl('messages.recordNoSaved')+'\n\r '+ errors)
                     emit('submit',[status, props.operation])
                     console.log(errors)
                 }
@@ -256,10 +259,12 @@
             props.form.patch(route(props.routePath, id.value), {
                 onSuccess: () => { 
                     status = 1
+                    successMessage(trnsl('messages.recordUpdated')) 
                     emit('submit',[status, props.operation])
                 },
                 onError: (errors) => {
                     status = 0
+                    errorMessage(trnsl('messages.recordNoUpdated')+'\n\r '+errors)
                     emit('submit',[status, props.operation])
                     console.log(errors)
                 }
@@ -271,11 +276,13 @@
             props.form.post(route(props.routePath, id.value), {
                 onSuccess: () => { 
                     status = 1
+                    successMessage(trnsl('messages.recordUpdated')) 
                     emit('submit',[status, props.operation])
                 },
                 onError: (errors) => {
                     status = 0
-                    emit('submit',[status, props.operation, errors[0] ])
+                    errorMessage(trnsl('messages.recordNoUpdated')+'\n\r '+errors)
+                    emit('submit',[status, props.operation])
                     console.log(errors)
                 }
             })

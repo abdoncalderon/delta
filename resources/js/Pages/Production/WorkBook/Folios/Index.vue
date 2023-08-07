@@ -286,6 +286,7 @@
             },
             onError: (errors) => {
                 errorMessage(trnsl('messages.recordNoSaved'))
+                console.log(errors)
             }
         })
     }
@@ -293,7 +294,7 @@
     onMounted(() => {
         var now = dayjs(undefined).format('MM-DD-YYYY')
         console.log(now)
-        formFilter.fromDate = dayjs(undefined)
+        formFilter.fromDate = dayjs(undefined).format('MM-DD-YYYY')
     })
 
     

@@ -19,7 +19,7 @@ class DailyReportController extends Controller
         $folio = Folio::with('location')
                 ->where('id',$id)
                 ->first();
-        $turns = LocationTurn::select(DB::raw("'location_turns.id' as id, CONCAT(turns.name, ' [', turns.start, '-', turns.finish, ']') as name"))
+        $turns = LocationTurn::select(DB::raw("location_turns.id as id, CONCAT(turns.name, ' [', turns.start, '-', turns.finish, ']') as name"))
                 ->join('turns','location_turns.turn_id','=','turns.id')
                 ->where('location_id',$folio->location_id)
                 ->get();
