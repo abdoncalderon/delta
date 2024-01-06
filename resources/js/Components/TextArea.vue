@@ -1,11 +1,12 @@
 <template>
     <textarea
-        class="block mt-1 w-full rounded-md form-input focus:border-indigo-600" 
+        class="block w-full text-xs rounded-md form-input focus:border-indigo-600 disabled:opacity-50" 
         :value="modelValue"
         @input="$emit('update:modelValue', $event.target.value)" 
         ref="input" 
         :disabled="disabled"
         :rows="rows"
+        
     ></textarea>
 </template>
 

@@ -19,7 +19,8 @@ class CreatePurchaseRequestNotificationsTable extends Migration
             $table->foreign('purchase_request_id')->references('id')->on('purchase_requests')->onUpdate('cascade')->onDelete('restrict');
             $table->foreignId('stakeholder_id');
             $table->foreign('stakeholder_id')->references('id')->on('stakeholders')->onUpdate('cascade')->onDelete('restrict');
-            $table->integer('status_id')->default('0');
+            $table->integer('status_id')->default('1');
+            $table->unique(['purchase_request_id','stakeholder_id'],'purchase_request_stakeholder_unique');
             $table->timestamps();
         });
     }

@@ -1,5 +1,9 @@
 <template>
-    <button :type="type" class="rounded-md bg-green-600 px-4 py-2 text-center text-sm text-white hover:bg-green-600">
+    <button 
+        :type="type" 
+        class="rounded-md bg-gray-500 px-3 py-1 text-center text-xs text-white hover:bg-gray-700 disabled:opacity-25"
+    >
+        <span class="pr-1"><i :class="icon"></i></span>
         <slot />
     </button>
 </template>
@@ -10,5 +14,6 @@ defineProps({
         type: String,
         default: 'submit',
     },
+    icon: String,
 });
 </script>

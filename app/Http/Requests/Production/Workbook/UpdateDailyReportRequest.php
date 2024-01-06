@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Workbook;
+namespace App\Http\Requests\Production\Workbook;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -14,11 +14,11 @@ class UpdateDailyReportRequest extends FormRequest
     public function rules()
     {
         return [
+            'folio_id'=>'required',
+            'turn_id'=>'required',
             'report'=>'required',
             'project_user_id'=>'required',
-            'status'=>'required',
-            'reviewedby'=>'required',
-            'approvedby'=>'required',
+            'responsible'=>'nullable',
         ];
     }
 }

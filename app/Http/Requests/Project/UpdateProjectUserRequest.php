@@ -17,8 +17,10 @@ class UpdateProjectUserRequest extends FormRequest
     {
         return [
             'user_id'=>'required',
-            'project_id'=>'required',
             'role_id'=>'required',
+            'user'=>'required',
+            'email'=>'required',
+            'isActive'=>'nullable',
         ];
     }
 }

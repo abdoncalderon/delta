@@ -74,4 +74,13 @@ class DepartmentController extends Controller
             return back()->withErrors( $e->getMessage());
         }
     }
+
+    public function getDepartments(Request $request, $id)
+    {
+        if($request->ajax())
+        {
+            $positions = Department::where('sector_id',$id)->get();
+            return response()->json($positions);
+        }
+    }
 }

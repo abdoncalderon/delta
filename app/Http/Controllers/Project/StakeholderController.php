@@ -2,34 +2,37 @@
 
 namespace App\Http\Controllers\Project;
 use App\Models\Project;
-use App\Models\City;
 use App\Models\Stakeholder;
 use App\Http\Controllers\Controller;
-use App\Models\StakeholderType;
 use App\Http\Requests\Project\StoreStakeholderRequest;
 use App\Http\Requests\Project\UpdateStakeholderRequest;
+use App\Models\Region;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 class StakeholderController extends Controller
 {
     public function index()
     {
-        $projects = Project::get();
-        $cities = City::get();
-        $stakeholderTypes = StakeholderType::get();
-        $stakeholders = Stakeholder::with('project')
-                        ->with('city')
-                        ->with('stakeholderType')
-                        ->where('project_id',session('current_project_id'))
-                        ->orderBy('name')
-                        ->get();
+        $project = Project::find(session('current_project_id'));
+        $regions = Region::orderBy('name')->get();
+        $stakeholders = Stakeholder::select(DB::raw("stakeholders.*, regions.id as region_id, countries.id as country_id, states.id as state_id"))
+            ->with('project')
+            ->with('city')
+            ->join('cities','stakeholders.city_id','=','cities.id')
+            ->join('states','cities.state_id','=','states.id')
+            ->join('countries','states.country_id','=','countries.id')
+            ->join('regions','countries.region_id','=','regions.id')
+            ->where('project_id',session('current_project_id'))
+            ->orderBy('name')
+            ->get();
+
         return Inertia::render('Project/Stakeholders/Index', [
             'stakeholders' => $stakeholders,
-            'projects' => $projects,
-            'cities' => $cities,
-            'stakeholderTypes' => $stakeholderTypes,
+            'project' => $project,
+            'regions' => $regions,
         ]);
     }
 
@@ -39,7 +42,7 @@ class StakeholderController extends Controller
             if($request->hasFile('logofile')){
                 $file = $request->file('logofile');
                 $logoFileName = time().'-'.$file->getClientOriginalName();
-                $file->move(public_path().'/storage/kapatax/images/stakeholders/',$logoFileName);
+                $file->move(public_path().'/storage/kapatax/images/project/stakeholders/',$logoFileName);
             }else{
                 $logoFileName = 'noPhoto.png';
             }
@@ -69,7 +72,7 @@ class StakeholderController extends Controller
                 
                 $file = $request->file('logofile');
                 $logoFileName = time().'-'.$file->getClientOriginalName();
-                $file->move(public_path().'/storage/kapatax/images/stakeholders/',$logoFileName);
+                $file->move(public_path().'/storage/kapatax/images/project/stakeholders/',$logoFileName);
                 
             }else{
                 $logoFileName = 'noPhoto.png';

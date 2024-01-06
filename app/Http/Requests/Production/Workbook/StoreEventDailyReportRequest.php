@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Workbook;
+namespace App\Http\Requests\Production\Workbook;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -20,6 +20,7 @@ class StoreEventDailyReportRequest extends FormRequest
             'finish'=>'required',
             'description'=>'required',
             'project_user_id'=>'required',
+            'haveImpact'=>'nullable'
         ];
     }
 }

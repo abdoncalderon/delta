@@ -1,15 +1,17 @@
 <template>
-    <div class="w-full p-1 bg-white border-neutral-300 border rounded-lg my-2">
-        <span class="inline-flex text-xs overflow-hidden rounded-md border bg-white shadow-sm">
+    <div class="w-full bg-gray-500 rounded-md overflow-hidden">
+        <span class="inline-flex  text-sm ">
             <template
-                v-for="button in buttons"
+                v-for="icon in icons"
             >
                 <button
-                    class="inline-block border-e px-2 py-1 hover:bg-gray-50 focus:relative"
-                    :title="button.text"
-                    @click="clickButton(button.name)"
+                    v-if="!icon.hidden"
+                    class="inline-block border-e px-2 py-1 bg-gray-500 text-white hover:bg-gray-700 focus:relative disabled:opacity-25"
+                    :title="icon.text"
+                    :disabled="icon.disabled"
+                    @click="clickIcon(icon.name)"
                 >
-                    <i :class="button.icon"></i>
+                    <i :class="icon.icon"></i>
                 </button>
             </template>
         </span>
@@ -17,14 +19,14 @@
 </template>
 <script setup>
      const props = defineProps({
-        buttons: Array,
+        icons: Array,
      })
 
      const emit = defineEmits([
         'click'
     ])
 
-    const clickButton = (button) => {
-        emit('click', button)
+    const clickIcon = (icon) => {
+        emit('click', icon)
     }
 </script>

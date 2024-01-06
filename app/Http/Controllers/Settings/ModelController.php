@@ -70,4 +70,13 @@ class ModelController extends Controller
             return back()->withErrors( $e->getMessage());
         }
     }
+
+    public function getModels(Request $request, $id)
+    {
+        if($request->ajax())
+        {
+            $models = Mode1::where('brand_id',$id)->get();
+            return response()->json($models);
+        }
+    }
 }

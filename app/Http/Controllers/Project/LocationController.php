@@ -74,5 +74,14 @@ class LocationController extends Controller
             return back()->withErrors( $e->getMessage());
         }
     }
+
+    public function getLocations(Request $request, $id)
+    {
+        if($request->ajax())
+        {
+            $locations = Location::where('zone_id',$id)->get();
+            return response()->json($locations);
+        }
+    }
     
 }

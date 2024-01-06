@@ -18,7 +18,7 @@ class StorePersonRequest extends FormRequest
             'firstName'=>'required',
             'lastName'=>'required',
             'fullName'=>'nullable',
-            'cardId'=>'required|unique:people,cardId',
+            'uid'=>'required|unique:people,uid',
             'gender_id'=>'required',
             'birthDate'=>'required',
             'jobTitle'=>'nullable',

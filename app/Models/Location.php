@@ -23,6 +23,16 @@ class Location extends Model
         return $this->hasMany(Folio::class);
     }
 
+    public function locationTurns()
+    {
+        return $this->hasMany(LocationTurn::class);
+    }
+
+    public function locationProjectUsers()
+    {
+        return $this->hasMany(LocationProjectUser::class);
+    }
+
     public function uploadSequence(){
         $newSequence = $this->sequence + 1;
         $this->update([

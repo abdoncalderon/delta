@@ -2,7 +2,7 @@
 
     <AuthenticatedLayout>
 
-        <Head :title="$trnsl('content.parameters')"></Head>
+        <Head :table="$trnsl('content.parameters')"></Head>
 
         <template #header>
             {{ $trnsl('content.parameters') }}
@@ -14,7 +14,7 @@
 
         <template #content>
             <div class="w-full mt-2 overflow-hidden rounded-lg shadow">
-                <div class="bg-neutral-700 p-2">
+                <div class="bg-gray-800 p-2">
                     <h3 class="text-white text-sm text-center">{{ trnsl('messages.importFromExcel')}}</h3>
                 </div>
                 <div class="flex flex-wrap p-2 sm:px-10 bg-white gap-2">

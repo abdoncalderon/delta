@@ -26,7 +26,7 @@ class MenuController extends Controller
             $request->validated();
             if($this->checkRoute($request->route)){
                 $menu = Menu::create([
-                    'code'=>$request->code,
+                    
                     'showName'=>$request->showName,
                     'father'=>$request->father,
                     'route'=>$request->route,

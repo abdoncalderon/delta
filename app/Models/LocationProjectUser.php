@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class LocationProjectUser extends Model
 {
-    protected $fillable = ['location_id','project_user_id','dailyreport_collaborator','dailyreport_approver','folio_approver','receive_notification',];
+    protected $fillable = ['location_id','project_user_id','profile','receive_notification',];
 
     public function location(){
         return $this->belongsTo(Location::class);

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Workbook;
+namespace App\Http\Requests\Production\Workbook;
 
 use Illuminate\Foundation\Http\FormRequest;
 

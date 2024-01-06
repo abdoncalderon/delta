@@ -23,6 +23,7 @@ class CreatePositionDailyReportsTable extends Migration
             $table->foreign('position_id')->references('id')->on('positions')->onUpdate('cascade')->onDelete('restrict');
             $table->integer('quantity');
             $table->boolean('approved')->default(false);
+            $table->unique(['daily_report_id','stakeholder_id','position_id'],'daily_report_stakeholder_position_unique');
             $table->timestamps();
         });
     }

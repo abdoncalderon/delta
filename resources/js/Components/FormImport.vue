@@ -1,6 +1,6 @@
 <template>
     <div class="w-full sm:w-48 bg-white shadow-lg rounded-lg overflow-hidden border border-neutral-400">
-        <div class="bg-neutral-100 border-b">
+        <div class="bg-gray-100 border-b">
             <h3 class="text-sm p-1 font-bold text-center">{{ table }}</h3>
         </div>
         <div class="text-center">
@@ -14,12 +14,13 @@
     </div>
 
     <Modal
-        :show="modalImport"
-        @close="closeModalImport"
+        :showModal="modalImport"
+        @closeModal="closeModalImport"
+        :title="title"
     >
-        <h3 class="p-3 font-semibold text-blue-500 bg-gray-100">
+        <!-- <h3 class="p-3 font-semibold text-blue-500 bg-gray-100">
             {{ title }}
-        </h3>
+        </h3> -->
 
         <!-- Name -->
         
@@ -71,7 +72,7 @@
     import InputLabel from '@/Components/InputLabel.vue'
     import TextInput from '@/Components/TextInput.vue'
     import Modal from '@/Components/Modal.vue';
-    import Swal from 'sweetalert2';
+    import { successMessage, errorMessage, dialogBox } from '@/Helpers/helper'
     import { trnsl } from '@/Lang/languages';
     import { useForm } from '@inertiajs/vue3';
     import { ref } from 'vue';
@@ -90,40 +91,6 @@
         'file': '',
     })
 
-    //Success Message
-    const successMessage = (msg) => {
-        closeModalImport();
-        Swal.fire({
-            position: 'top-end',
-            toast: true,
-            timer: 2000,
-            titleText: msg, 
-            icon: 'success',
-            showConfirmButton: false,
-            showClass: {
-                popup: '',
-                icon: '',
-            },
-        });
-    }
-
-    //Error Message
-    const errorMessage = (msg) => {
-        closeModalImport();
-        Swal.fire({
-            position: 'top-end',
-            toast: true,
-            timer: 2000,
-            titleText: msg, 
-            icon: 'error',
-            showConfirmButton: false,
-            showClass: {
-                popup: '',
-                icon: '',
-            },
-        });
-    }
-
     //Open Modal Import Form
     const openModalImport = () => {
         modalImport.value = true;
@@ -139,7 +106,10 @@
     //Import Records
     const importRecord = () => {
         formImport.post(route(props.routeImport),{
-            onSuccess: () => { successMessage(trnsl('messages.successfullImport')) },
+            onSuccess: () => { 
+                successMessage(trnsl('messages.successfullImport')) 
+                closeModalImport()
+            },
             onError: () => { errorMessage(trnsl('messages.errorsInImport')) }
         });
     }

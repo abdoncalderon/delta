@@ -17,9 +17,7 @@ class LocationProjectUserSeeder extends Seeder
         DB::table('location_project_users')->insert([
             'location_id' => '1',
             'project_user_id' => '1',
-            'dailyreport_collaborator' => '1',
-            'dailyreport_approver' => '1',
-            'folio_approver' => '1',
+            'profile' => '1',
             'receive_notification' => '1',
         ]);
     }

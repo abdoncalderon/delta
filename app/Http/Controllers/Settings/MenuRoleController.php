@@ -15,7 +15,7 @@ class MenuRoleController extends Controller
             $projectUser = ProjectUser::where('project_id', $id)
                         ->where('user_id',auth()->user()->id)
                         ->first();
-            session(['currentProjectUserId' => $projectUser->id]);
+            session(['current_project_user' => $projectUser]);
             $menusRole = Menu::select('menus.*')
                         ->join('menu_roles','menus.id','=','menu_roles.menu_id')
                         ->where('role_id', $projectUser->role_id)
@@ -24,5 +24,6 @@ class MenuRoleController extends Controller
             
             return response()->json($menusRole);
         }
-    }   
+    }  
+     
 }

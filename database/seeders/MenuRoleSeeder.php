@@ -300,23 +300,23 @@ class MenuRoleSeeder extends Seeder
             'isActive' => '1',
         ]);
 
-        DB::table('menu_roles')->insert([
+        /* DB::table('menu_roles')->insert([
             'menu_id' => '49',
             'role_id' => '1',
             'isActive' => '1',
         ]);
 
-        DB::table('menu_roles')->insert([
+         DB::table('menu_roles')->insert([
             'menu_id' => '50',
             'role_id' => '1',
             'isActive' => '1',
         ]);
 
-        DB::table('menu_roles')->insert([
+       DB::table('menu_roles')->insert([
             'menu_id' => '51',
             'role_id' => '1',
             'isActive' => '1',
-        ]);
+        ]); */
 
         /*DB::table('menu_roles')->insert([
             'menu_id' => '52',

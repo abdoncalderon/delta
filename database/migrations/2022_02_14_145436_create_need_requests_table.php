@@ -24,7 +24,7 @@ class CreateNeedRequestsTable extends Migration
             $table->unsignedBigInteger('approver_id')->nullable();
             $table->unsignedBigInteger('cost_account_id')->nullable();
             $table->decimal('expectedCost')->nullable();
-            $table->integer('status_id');
+            $table->integer('status_id')->default('0');
             $table->timestamps();
         });
     }

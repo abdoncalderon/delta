@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Project\StoreSectorRequest;
 use App\Http\Requests\Project\UpdateSectorRequest;
 use App\Imports\SectorsImport;
+use App\Models\Department;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Exception;
@@ -72,4 +73,6 @@ class SectorController extends Controller
             return back()->withErrors( $e->getMessage());
         }
     }
+
+    
 }

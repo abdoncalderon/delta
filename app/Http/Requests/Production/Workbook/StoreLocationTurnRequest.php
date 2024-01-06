@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Workbook;
+namespace App\Http\Requests\Production\Workbook;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -15,7 +15,7 @@ class StoreLocationTurnRequest extends FormRequest
     public function rules()
     {
         return [
-            'turn_id'=>'required',
+            'turns'=>'required',
             'location_id'=>'required',
             'dateFrom'=>'required',
             'dateTo'=>'required',

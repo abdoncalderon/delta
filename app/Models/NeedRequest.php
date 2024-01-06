@@ -16,12 +16,16 @@ class NeedRequest extends Model
         return $this->belongsTo(Location::class);
     }
 
+    public function costAccount(){
+        return $this->belongsTo(CostAccount::class);
+    }
+
     public function needRequestItems(){
         return $this->hasMany(NeedRequestItem::class);
     }
 
     public function approver(){
-        return $this->belongsTo(StakeholderPerson::class,'approver_id','id');
+        return $this->belongsTo(ProjectUser::class,'approver_id','id');
     }
 
     public function purchaseRequest(){

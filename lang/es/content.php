@@ -49,7 +49,7 @@ return [
     'buyer'=>'Comprador',
     'by'=>'por',
     'cancel' => 'Cancelar',
-    'cardid' => 'Identificación',
+    'uid' => 'Documento único de Identificación',
     'cardId'=>'Tarjeta de Identificación',
     'categories'=>'Categorias',
     'category'=>'Categoria',

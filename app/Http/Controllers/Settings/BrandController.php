@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Imports\BrandsImport;
 use App\Http\Requests\Settings\StoreBrandRequest;
 use App\Http\Requests\Settings\UpdateBrandRequest;
+use App\Models\Mode1;
 use Illuminate\Http\Request;
 use Exception;
 
@@ -66,4 +67,6 @@ class BrandController extends Controller
             return back()->withErrors( $e->getMessage());
         }
     }
+
+    
 }

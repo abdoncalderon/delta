@@ -14,11 +14,11 @@ class UpdateMenuRequest extends FormRequest
     public function rules()
     {
         return [
-            'code'=>'required',
-            'showName'=>'required',
-            'route'=>'',
-            'menu_id'=>'',
-            'icon'=>'',
+            'name'=>'required',
+            'text'=>'required',
+            'route'=>'nullable',
+            'father'=>'nullable',
+            'icon'=>'nullable',
         ];
     }
 }

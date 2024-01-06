@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Workbook;
+namespace App\Http\Requests\Production\Workbook;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -14,7 +14,7 @@ class UpdateNoteRequest extends FormRequest
     public function rules()
     {
         return [
-            'note'=>'required',
+            // 'note'=>'required',
             'status'=>'required',
         ];
     }

@@ -15,7 +15,52 @@ class FunctionSeeder extends Seeder
     public function run()
     {
         DB::table('funct1ons')->insert([
-            'name' => 'Manager',
+            'name' => 'Asistente',
+            'project_id' => '1',
+        ]);
+
+        DB::table('funct1ons')->insert([
+            'name' => 'Auxiliar',
+            'project_id' => '1',
+        ]);
+
+        DB::table('funct1ons')->insert([
+            'name' => 'Coordinador',
+            'project_id' => '1',
+        ]);
+
+        DB::table('funct1ons')->insert([
+            'name' => 'Director',
+            'project_id' => '1',
+        ]);
+
+        DB::table('funct1ons')->insert([
+            'name' => 'Especialista',
+            'project_id' => '1',
+        ]);
+
+        DB::table('funct1ons')->insert([
+            'name' => 'Gerente',
+            'project_id' => '1',
+        ]);
+
+        DB::table('funct1ons')->insert([
+            'name' => 'Jefe',
+            'project_id' => '1',
+        ]);
+
+        DB::table('funct1ons')->insert([
+            'name' => 'Obrero',
+            'project_id' => '1',
+        ]);
+
+        DB::table('funct1ons')->insert([
+            'name' => 'Responsable',
+            'project_id' => '1',
+        ]);
+
+        DB::table('funct1ons')->insert([
+            'name' => 'Técnico',
             'project_id' => '1',
         ]);
     }

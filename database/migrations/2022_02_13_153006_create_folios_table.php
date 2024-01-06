@@ -24,6 +24,7 @@ class CreateFoliosTable extends Migration
             $table->integer('number');
             $table->string('signature_approver')->nullable();
             $table->string('signature_reviewer')->nullable();
+            $table->unique(['date','location_id'],'date_location_unique');
             $table->timestamps();
         });
     }

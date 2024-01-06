@@ -17,4 +17,9 @@ class PositionDailyReport extends Model
     {
         return $this->belongsTo(Position::class);
     }
+
+    public function dailyReport()
+    {
+        return $this->belongsTo(DailyReport::class);
+    }
 }

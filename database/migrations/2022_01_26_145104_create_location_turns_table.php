@@ -19,8 +19,8 @@ class CreateLocationTurnsTable extends Migration
             $table->foreign('turn_id')->references('id')->on('turns')->onUpdate('cascade')->onDelete('restrict');
             $table->foreignId('location_id');
             $table->foreign('location_id')->references('id')->on('locations')->onUpdate('cascade')->onDelete('restrict');
-            $table->dateTime('dateFrom');
-            $table->dateTime('dateTo');
+            $table->date('dateFrom');
+            $table->date('dateTo');
             $table->timestamps();
         });
     }

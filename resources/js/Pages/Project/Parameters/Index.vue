@@ -2,7 +2,7 @@
 
     <AuthenticatedLayout>
 
-        <Head :title="$trnsl('content.permits')"></Head>
+        <Head :table="$trnsl('content.permits')"></Head>
 
         <template #header>
             {{ $trnsl('content.parameters') }}
@@ -49,6 +49,10 @@
                     <FormImport
                         :table="trnsl('content.categories')"    
                         routeImport="project.categories.import"                   
+                    />
+                    <FormImport
+                        :table="trnsl('content.subcategories')"    
+                        routeImport="project.subcategories.import"                   
                     />
                     <FormImport
                         :table="trnsl('content.turns')"    

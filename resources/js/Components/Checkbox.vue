@@ -1,6 +1,6 @@
 <template>
-    <div class="flex justify-center border h-auto border-gray-500 rounded-md ">
-        <input type="checkbox" :value="value" v-model="proxyChecked" class="my-2 text-indigo-600">
+    <div class="flex justify-center border border-gray-500 rounded-md ">
+        <input type="checkbox" :value="value" v-model="proxyChecked" class="my-1 text-indigo-600">
     </div>
    
 </template>

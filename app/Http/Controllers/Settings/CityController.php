@@ -70,5 +70,14 @@ class CityController extends Controller
         }
     }
 
+    public function getCities(Request $request, $id)
+    {
+        if($request->ajax())
+        {
+            $cities = City::where('state_id',$id)->orderBy('name')->get();
+            return response()->json($cities);
+        }
+    }
+
     
 }

@@ -13,11 +13,11 @@
                         class="group [&_summary::-webkit-details-marker]:hidden"
                     >
                         <summary
-                            class="group flex gap-0  justify-between px-4 py-2 text-gray-300 hover:bg-gray-100 hover:text-gray-700"
+                            class="group flex gap-0 justify-between px-4 py-1 text-gray-300 hover:bg-gray-900 hover:text-white"
                         >
-                            <div class="flex items-center gap-2">
+                            <div class="flex items-center gap-2 text-sm">
                                 <i :class="menu.icon" style="padding-right: 5px;"></i>
-                                <span class="font-medium"> {{ $trnsl(menu.text) }} </span>
+                                <span> {{ $trnsl(menu.text) }} </span>
                             </div>
 
                             <span 
@@ -32,11 +32,15 @@
                         >
                             <template v-for="submenu in menu.menus" :key="submenu.id">
                                 <li>
-                                    <nav-link
-                                        class="text-xs text-neutral-400 hover:bg-neutral-600 hover:text-white"
+                                    <!-- <nav-link
+                                        class="text-xs text-white bg-gray-600 hover:bg-gray-700 hover:text-white active:bg-gray-700"
                                         :href="route(submenu.route)" :active="route().current(submenu.route)"
-                                    >   
-                                        <span class="text-sm marker:font-medium"> 
+                                    >   -->
+                                    <nav-link
+                                        class="text-xs text-white bg-gray-700 hover:bg-gray-800 hover:text-white active:bg-gray-700"
+                                        :href="route(submenu.route)" 
+                                    >  
+                                        <span class="text-xs"> 
                                             <i :class="submenu.icon" style="padding-right: 5px;"></i>
                                             {{ $trnsl(submenu.text) }} 
                                         </span>

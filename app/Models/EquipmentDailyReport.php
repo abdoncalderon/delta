@@ -17,4 +17,9 @@ class EquipmentDailyReport extends Model
     {
         return $this->belongsTo(Equipment::class);
     }
+
+    public function dailyReport()
+    {
+        return $this->belongsTo(DailyReport::class);
+    }
 }

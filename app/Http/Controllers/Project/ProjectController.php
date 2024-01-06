@@ -9,30 +9,31 @@ use App\Models\Stakeholder;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Settings\StoreProjectRequest;
 use App\Http\Requests\Settings\UpdateProjectRequest;
+use App\Models\Region;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 class ProjectController extends Controller
 {
-   /*  public function index()
-    {
-        $cities = City::get();
-        $projects = Project::with('subsidiary')->with('city')->orderBy('name')->get();
-        return Inertia::render('Project/Project/Index', [
-            'projects' => $projects,
-            'cities' => $cities,
-        ]);
-    } */
+   
 
     public function edit()
     {
-        $subsidiaries = Subsidiary::get();
-        $cities = City::get();
+        $project = Project::select(DB::raw("projects.*, regions.id as region_id, countries.id as country_id, states.id as state_id"))
+            ->with('subsidiary')
+            ->join('cities','projects.city_id','=','cities.id')
+            ->join('states','cities.state_id','=','states.id')
+            ->join('countries','states.country_id','=','countries.id')
+            ->join('regions','countries.region_id','=','regions.id')
+            ->where('projects.id',session('current_project_id'))
+            ->first();
+        $regions = Region::orderBy('name')->get();
         $stakeholders = Stakeholder::get();
         return Inertia::render('Project/Project/Edit', [
-            'subsidiaries' => $subsidiaries,
-            'cities' => $cities,
+            'project' => $project,
+            'regions' => $regions,
             'stakeholders' => $stakeholders,
         ]);
     }

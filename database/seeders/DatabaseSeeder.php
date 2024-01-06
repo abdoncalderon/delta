@@ -1,8 +1,5 @@
 <?php
 
-use Database\Seeders\StakeholderTypeSeeder;
-use Database\Seeders\GenderSeeder;
-use Database\Seeders\GroupSeeder;
 use Database\Seeders\StatusSeeder;
 use Database\Seeders\RoleSeeder;
 use Database\Seeders\RegionSeeder;
@@ -34,11 +31,12 @@ use Database\Seeders\MenuSeeder;
 use Database\Seeders\MenuRoleSeeder;
 use Database\Seeders\PermitSeeder;
 use Database\Seeders\RolePermitSeeder;
+use Database\Seeders\WorkbookUserProfileSeeder;
+use Database\Seeders\BrandSeeder;
+use Database\Seeders\ModelSeeder;
+use Database\Seeders\UnitySeeder;
+use Database\Seeders\ShiftSeeder;
 use Illuminate\Database\Seeder;
-
-
-
-
 
 class DatabaseSeeder extends Seeder
 {
@@ -50,9 +48,6 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-            StakeholderTypeSeeder::class,
-            GenderSeeder::class,
-            GroupSeeder::class,
             StatusSeeder::class,
             RoleSeeder::class,
             RegionSeeder::class,
@@ -70,6 +65,7 @@ class DatabaseSeeder extends Seeder
             ZoneSeeder::class,
             LocationSeeder::class,
             TurnSeeder::class,
+            ShiftSeeder::class,
             StakeholderSeeder::class,
             DepartmentSeeder::class,
             PositionSeeder::class,
@@ -80,14 +76,14 @@ class DatabaseSeeder extends Seeder
             ProjectUserSeeder::class,
             LocationProjectUserSeeder::class,
             WarehouseSeeder::class,
-            // DefaultSeeder::class,
             MenuSeeder::class,
             MenuRoleSeeder::class,
             PermitSeeder::class,
             RolePermitSeeder::class,
-            
+            WorkbookUserProfileSeeder::class,
+            BrandSeeder::class,
+            ModelSeeder::class,
+            UnitySeeder::class,
         ]);
-
-        
     }
 }

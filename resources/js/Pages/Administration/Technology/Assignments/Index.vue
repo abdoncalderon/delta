@@ -12,24 +12,24 @@
         </template>
 
         <template #content>
-            <ToolBar
-                :buttons="buttons"
-                @click="clickIconToolBar"
-            />
+            
+            <div class="my-2">
+                <ToolBar
+                    :icons="icons"
+                    @click="clickIconToolBar"
+                />
+            </div>
+            
             <DataTable
                 :key="reload"
                 :headers="headers"
                 :actions="actions"
                 :dataset="stakeholderPeople"
-                :table="trnsl('content.people')"
+                :title="trnsl('content.people')"
                 fieldSearch="name"
-                @select="executeAction"
+                @action="getAction"
             />
         </template>
-
-       
-
-        
 
     </AuthenticatedLayout>  
 </template>
@@ -47,50 +47,50 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
         stakeholderPeople: Array,
     });
 
-    const page = usePage();
-    
     const form = useForm({});
 
     const reload = ref(0)
-    const modal = ref(false)
-    const title = ref('');
-    const operation = ref('');
-    const routePath = ref('');
 
     const headers = [
-                    {name: 'person.fullName', text: trnsl('content.person'), type: 'text', align: 'left'},
-                    {name: 'stakeholder.name', text: trnsl('content.stakeholder'), type: 'text', align: 'left'},
-                ];
+        {name: 'person.fullName', text: trnsl('content.person'), type: 'text', align: 'left'},
+        {name: 'stakeholder.name', text: trnsl('content.stakeholder'), type: 'text', align: 'left'},
+    ];
 
     const actions = [
-                    {name: 'equipments', type: 'icon', text: trnsl('content.equipments'), icon: 'fa fa-laptop', color: 'secondary'},
-                    {name: 'applications', type: 'icon', text: trnsl('content.applications'), icon: 'fa-brands fa-microsoft', color: 'secondary' },
-                    {name: 'lines', type: 'icon', text: trnsl('content.applications'), icon: 'fa fa-phone', color: 'secondary' },
-                ];
+        {name: 'equipments', type: 'icon', text: trnsl('content.equipments'), icon: 'fa fa-laptop', color: 'secondary'},
+        {name: 'applications', type: 'icon', text: trnsl('content.applications'), icon: 'fa-brands fa-microsoft', color: 'secondary' },
+        {name: 'lines', type: 'icon', text: trnsl('content.applications'), icon: 'fa fa-phone', color: 'secondary' },
+    ];
 
-    const buttons = [
-                    
-                    {name: 'exit', text: trnsl('content.exit'), icon: 'fa-solid fa-arrow-up-right-from-square'}
-                ];
+    const icons = [
+        {name: 'home', text: trnsl('content.home'), icon: 'fa fa-home'},
+        {name: 'back', text: trnsl('content.back'), icon: 'fa fa-arrow-left'},
+    ];
     
     const home = () => {
         router.visit(route('dashboard'))
     } 
 
-    const executeAction = ( params ) => {
-        if (params[1]==='equipments') {
-            form.get(route('administration.technology.assignments.assets', params[0].id))
-        } else if (params[1]==='applications') {
+    const back = () => {
+        router.visit(route('administration.technology.home'))
+    } 
+
+    const getAction = ( action ) => {
+        if (action.name==='equipments') {
+            form.get(route('administration.technology.assignments.assets', action.data.id))
+        } else if (action.name==='applications') {
                     router.visit(route('dashboard'))
-                } else if (params[1]==='lines') {
+                } else if (action.name==='lines') {
                             router.visit(route('dashboard'))
                         }
     }
 
     const clickIconToolBar = (button) => {
-        if (button === 'exit') {
+        if (button === 'home') {
             home()
-        } 
+        } else if (button === 'back') {
+                    back()
+                }
     }
 
 

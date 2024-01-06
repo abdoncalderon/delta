@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Project\StoreCategoryRequest;
 use App\Http\Requests\Project\UpdateCategoryRequest;
 use App\Imports\CategoriesImport;
+use App\Models\Subcategory;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Exception;
@@ -73,5 +74,16 @@ class CategoryController extends Controller
         }catch(Exception $e){
             return back()->withErrors( $e->getMessage());
         }
+    } 
+
+    public function getCategories(Request $request, $id)
+    {
+        if($request->ajax())
+        {
+            $categories = Category::where('family_id',$id)->get();
+            return response()->json($categories);
+        }
     }
+
+    
 }

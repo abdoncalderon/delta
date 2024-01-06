@@ -4,141 +4,166 @@
 
         <!-- HEADER -->
 
-        <div class="flex bg-neutral-800 border-b p-1 justify-between">
+        <div class="flex bg-gray-700 border-b p-1 justify-between">
             
-            <span class="px-2 py-1 m-1  text-white">
-                <p class="text-sm uppercase">{{ table }}</p>
+            <span class="px-2 py-1  text-white">
+                <p class="text-sm">{{ title }}</p>
             </span>
             
-            <span class="flex bg-white m-1 rounded-lg overflow-hidden">
-                <span class="text-sm ml-2 mt-1">
-                    <i class="fa fa-search"></i>
-                </span>
+            <span class="flex bg-white m-1 rounded-md overflow-hidden">
+                
                 <input v-model="textSearch" class="appareance-none focus:outline-none px-2 text-xs" @keyup="search"/>
             </span>
         </div>
 
         <!-- TABLE -->
+        <div>
 
-        <table class="min-w-full divide-y divide-gray-300 rounded-lg overflow-auto" id="dataTable">
-            <thead class="bg-neutral-700">
-                <tr class="tracking-wide">
-                    <template
-                        v-for="(header, x) in headers"
-                        :key="x"
-                    >
-                        <th class="px-6 py-2 text-xs text-white tracking-wider">
-                            {{ header.text }}
+            <table class="w-full divide-y divide-gray-300 rounded-lg " >
+
+                <thead class="bg-gray-600">
+                    <tr class="tracking-normal">
+                        <template
+                            v-for="(header, x) in headers"
+                            :key="x"
+                        >
+                            <th class="px-2 py-1 text-xs text-white ">
+                                {{ header.text }}
+                            </th>
+                        </template>
+                        <th v-if="showActions" class="px-2 py-1 text-xs text-white ">
+                            {{ trnsl('content.actions') }}
                         </th>
-                    </template>
-                    <th class="px-6 py-2 text-xs text-white tracking-wider">
-                        {{ trnsl('content.actions') }}
-                    </th>
-                </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-300">
-                <tr v-for="(row, y) in page" :key="y">
-                    
-                    <template
-                        v-for="(header, x) in headers"
-                        :key="x"
-                    >
-                        <td v-if="header.align==='right'" class="whitespace-wrap px-6 py-1 text-xs text-gray-500 text-end ">
-                            <span v-if="header.type==='text'">
-                                {{ showValue(row, header.name) }}
-                            </span>
-                            <span v-if="header.type==='date'">
-                                {{ formatDate(showValue(row, header.name),'dddd MMMM D, YYYY') }}
-                            </span>
-                            <span v-if="header.type==='image'" class="margin-auto">
-                                <img class="object-contain h-10 w-20" :src=" header.path + row[header.name]" alt="">
-                            </span>
-                        </td>
-                        <td v-else-if="header.align==='center'" class="whitespace-wrap px-6 py-1 text-xs text-gray-500 text-center" >
-                            <span v-if="header.type==='text'">
-                                {{ showValue(row, header.name) }}
-                            </span>
-                            <span v-if="header.type==='date'">
-                                {{ formatDate(showValue(row, header.name),'dddd MMMM D, YYYY') }}
-                            </span>
-                            <span v-if="header.type==='image'">
-                                <img class="m-auto object-contain h-10 w-20" :src=" header.path + row[header.name]" alt="">
-                            </span>
-                        </td>
-                        <td v-else-if="header.align==='left'" class="whitespace-wrap px-6 py-1 text-xs text-gray-500 text-start ">
-                            <span v-if="header.type==='text'">
-                                {{ showValue(row, header.name) }}
-                            </span>
-                            <span v-if="header.type==='date'">
-                                {{ formatDate(showValue(row, header.name),'dddd MMMM D, YYYY') }}
-                            </span>
-                            <span v-if="header.type==='image'" class="margin-auto">
-                                <img class="object-contain h-10 w-20" :src=" header.path + row[header.name]" alt="">
-                            </span>
-                        </td>
-                    </template>
+                    </tr>
+                </thead>
 
-                    <td class="px-6 py-1 text-xs text-gray-500 text-center">
-                        <span class="inline-flex overflow-hidden rounded-md border bg-white shadow-sm">
-                            <template 
-                                v-for="(action, k) in actions" 
-                                :key="k"
-                            >
-                                <button
-                                    v-if="action.color==='primary'"
-                                    class="inline-block border-e px-2 py-1 text-green-600 hover:bg-gray-50 focus:relative"
-                                    :title="action.text"
-                                    @click="selectRow(row, action.name)"
+                <tbody class="bg-white divide-y divide-gray-300">
+                    <tr v-for="(row, y) in page" :key="y">
+                        
+                        <template
+                            v-for="(header, x) in headers"
+                            :key="x"
+                        >
+                            <td v-if="header.align==='right'" class="whitespace-wrap px-2 py-0.5 text-xs text-gray-500 text-end ">
+                                <span v-if="header.type==='text'">
+                                    {{ showValue(row, header.name) }}
+                                </span>
+                                <span v-if="header.type==='date'">
+                                    {{ formatDate(showValue(row, header.name),'DD/MM/YY') }}
+                                </span>
+                                <span v-if="header.type==='time'">
+                                    {{ formatDate(showValue(row, header.name),'H:m:s') }}
+                                </span>
+                                <span v-if="header.type==='image'" class="margin-auto">
+                                    <img class="object-contain h-10 w-20" :src=" header.path + row[header.name]" alt="">
+                                </span>
+                                <span v-if="header.type==='list'" class="margin-auto">
+                                    {{ showItem(row, header.name, header.items ) }}
+                                </span>
+                            </td>
+                            <td v-else-if="header.align==='center'" class="whitespace-wrap px-2 py-0.5 text-xs text-gray-500 text-center" >
+                                <span v-if="header.type==='text'">
+                                    {{ showValue(row, header.name) }}
+                                </span>
+                                <span v-if="header.type==='date'">
+                                    {{ formatDate(showValue(row, header.name),'DD/MM/YY') }}
+                                </span>
+                                <span v-if="header.type==='time'">
+                                    {{ formatDate(showValue(row, header.name),'H:m:s') }}
+                                </span>
+                                <span v-if="header.type==='image'">
+                                    <img class="m-auto object-contain h-10 w-20" :src=" header.path + row[header.name]" alt="">
+                                </span>
+                                <span v-if="header.type==='list'" class="margin-auto">
+                                    {{ showItem(row, header.name, header.items ) }}
+                                </span>
+                            </td>
+                            <td v-else-if="header.align==='left'" class="whitespace-wrap px-2 py-1 text-xs text-gray-500 text-start ">
+                                <span v-if="header.type==='text'">
+                                    {{ showValue(row, header.name) }}
+                                </span>
+                                <span v-if="header.type==='date'">
+                                    {{ formatDate(showValue(row, header.name),'DD/MM/YY') }}
+                                </span>
+                                <span v-if="header.type==='time'">
+                                    {{ formatDate(showValue(row, header.name),'H:m:s') }}
+                                </span>
+                                <span v-if="header.type==='image'" class="margin-auto">
+                                    <img class="object-contain h-10 w-20" :src=" header.path + row[header.name]" alt="">
+                                </span>
+                                <span v-if="header.type==='list'" class="margin-auto">
+                                    {{ showItem(row, header.name, header.items ) }}
+                                    
+                                </span>
+                            </td>
+                        </template>
+
+                        <td v-if="showActions" class="px-2 py-0.5 text-xs text-gray-500 text-center">
+                            <span class=" inline-flex overflow-hidden rounded-md border bg-white shadow-sm">
+                                <template 
+                                    v-for="(action, k) in actions" 
+                                    :key="k"
                                 >
-                                    <i v-if="action.type==='icon'" :class="action.icon"></i>
-                                    <p v-if="action.type==='badge'" class="bg-green-600 text-white px-2 py-1 rounded-md">{{ action.text }}</p>
-                                </button>
-                                <button
-                                    v-if="action.color==='secondary'"
-                                    class="inline-block border-e px-2 py-1 text-gray-600 hover:bg-gray-50 focus:relative"
-                                    :title="action.text"
-                                    @click="selectRow(row, action.name)"
-                                >
-                                    <i v-if="action.type==='icon'" :class="action.icon"></i>
-                                    <p v-if="action.type==='badge'" class="bg-gray-600 text-white px-2 py-1 rounded-md">{{ action.text }}</p>
-                                </button>
-                                <button
-                                    v-if="action.color==='danger'"
-                                    class="inline-block border-e px-2 py-1 text-red-600 hover:bg-gray-50 focus:relative"
-                                    :title="action.text"
-                                    @click="selectRow(row, action.name)"
-                                >
-                                    <i v-if="action.type==='icon'" :class="action.icon"></i>
-                                    <p v-if="action.type==='badge'" class="bg-red-600 text-white px-2 py-1 rounded-md">{{ action.text }}</p>
-                                </button>
-                            </template>
-                        </span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                                    <button
+                                        v-if="action.color==='primary'"
+                                        class="inline-block border-e px-2 py-0.5 text-green-600 hover:bg-gray-50 focus:relative disabled:opacity-25"
+                                        :title="action.text"
+                                        :disabled="isDisabled( row, action.disabledField )"
+                                        @click="selectRow(row, action.name)"
+                                    >
+                                        <i v-if="action.type==='icon'" :class="action.icon"></i>
+                                        <p v-if="action.type==='badge'" class="bg-green-600 text-white text-xs px-2 py-1 rounded-md">{{ action.text }}</p>
+                                    </button>
+                                    <button
+                                        v-if="action.color==='secondary'"
+                                        class="inline-block border-e px-2 py-0.5 text-gray-600 hover:bg-gray-50 focus:relative disabled:opacity-25"
+                                        :title="action.text"
+                                        :disabled="isDisabled( row, action.disabledField )"
+                                        @click="selectRow(row, action.name)"
+                                    >
+                                        <i v-if="action.type==='icon'" :class="action.icon"></i>
+                                        <p v-if="action.type==='badge'" class="bg-gray-600 text-white text-xs px-2 py-1 rounded-md">{{ action.text }}</p>
+                                    </button>
+                                    <button
+                                        v-if="action.color==='danger'"
+                                        class="inline-block border-e px-2 py-0.5 text-red-600 hover:bg-gray-50 focus:relative disabled:opacity-25"
+                                        :title="action.text"
+                                        :disabled="isDisabled( row, action.disabledField )"
+                                        @click="selectRow(row, action.name)"
+                                    >
+                                        <i v-if="action.type==='icon'" :class="action.icon"></i>
+                                        <p v-if="action.type==='badge'" class="bg-red-600 text-white text-xs px-2 py-1 rounded-md">{{ action.text }}</p>
+                                    </button>
+                                </template>
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
         <!-- FOOTER -->
 
-        <div class="w-full flex border-t flex-wrap justify-between bg-neutral-700">
+        <div class="w-full flex border border-t-gray-500 flex-wrap justify-between bg-white ">
             
-            <span class="flex p-2 w-full md:w-1/2">
+            <span class="flex px-2 py-1 w-full md:w-1/2">
                 <span v-if="((dataset.length > rowsPerPage) && !onSearch)" class="flex flex-wrap">
                     <template v-for="(link,i) in links" :key="i">
-                        <button v-if="link === currentPage" class="text-xs text-black bg-white rounded border px-1 border-white mx-1 w-10"  @click="selectPage(link)">{{ link }}</button>
-                        <button v-else class="text-xs text-white rounded border px-1 border-white mx-1 w-10" @click="selectPage(link)">{{ link }}</button>
+                        <button v-if="link === currentPage" class="text-xs text-white bg-gray-800 rounded border px-1 border-gray-500 mx-0.5 w-10"  @click="selectPage(link)">{{ link }}</button>
+                        <button v-else class="text-xs text-black rounded border px-1 border-gray-500 mx-0.5 w-9" @click="selectPage(link)">{{ link }}</button>
                     </template>
                 </span>
             </span>
             
-            <span v-if="!onSearch" class="flex p-2" >
-                <h3 class="text-xs text-white px-2 py-1">
+            <span v-if="!onSearch" class="flex px-2 py-1" >
+                <h3 class="text-xs px-2 py-1">
                     {{ trnsl('messages.recordsPerPage') }}
                 </h3>
                 <select class="text-xs py-0 pr-7 rounded-lg" v-model="rowsPerPage" @change="changeSizePage">
-                    <option class="text-xs p-0" value="10">10</option>
-                    <option class="text-xs p-0" value="20">20</option>
-                    <option class="text-xs p-0" value="30">30</option>
+                    <option class="text-xs" value="10">10</option>
+                    <option class="text-xs" value="20">20</option>
+                    <option class="text-xs" value="30">30</option>
+                    <option class="text-xs" value="50">50</option>
                 </select>
             </span>
         </div>
@@ -157,12 +182,16 @@
         headers: Array,
         actions: Array,
         dataset: Object,
-        table: String,
+        title: String,
         fieldSearch: String,
+        showActions: {
+            type: Boolean,
+            default: true,
+        }
     })
 
     const emit = defineEmits([
-        'select'
+        'action'
     ])
   
     const page = reactive([]);
@@ -172,6 +201,11 @@
     const nPages = ref(1);
     const onSearch = ref(false);
     const textSearch = ref('');
+
+    let action = {
+        name: '',
+        data: null,
+    }
 
     //Calculate Pages
     const calcPages = () => {
@@ -189,7 +223,7 @@
 
     //Create Links Pagination
     const makeLinks = (pageSelected) => {
-        links.lenght = 0;
+        links.lenght = 0
         if (nPages.value > 9) {
             if ((pageSelected >= 1) && (pageSelected <= 4)) {
                 links[0] = '<<'
@@ -221,6 +255,7 @@
                                 links[8] = '>>';
                             }  
         } else {
+            links.length = 0
             for (let i = 0;i <= nPages.value -1;i++) {
                 links[i] = i + 1;
             }
@@ -272,11 +307,29 @@
                 value = row[names[0]][names[1]];
             } else if (names.length==3) {
                         value = row[names[0]][names[1]][names[2]];
-                    }
+                    } else if (names.length==4) {
+                                value = row[names[0]][names[1]][names[2]][names[3]];
+                            } else if (names.length==5) {
+                                        value = row[names[0]][names[1]][names[2]][names[3]][names[4]];
+                                    }
         } else {
             value = row[str];
         }
         return value
+    }
+
+    function isDisabled (row, name) {
+        return row[name]
+    }
+
+    function showItem(row, name, list) {
+        let result = ''
+        list.forEach((item, x)=>{
+            if (item.id==row[name]) {
+                result = item.name
+            }
+        })
+        return result
     }
 
     //Fill Page with Rows
@@ -324,9 +377,13 @@
         }
     }
 
-    const selectRow = (row, action) => {
-        emit('select',[row, action])
+    const selectRow = (rowSelected, actionSelected) => {
+        action.name = actionSelected
+        action.data = rowSelected
+        emit('action', action)
     }
+
+
     
     onMounted(()=>{
         calcPages();

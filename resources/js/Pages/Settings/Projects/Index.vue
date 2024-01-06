@@ -12,37 +12,37 @@
         </template>
 
         <template #content>
-            <ToolBar
-                :buttons="buttons"
-                @click="clickIconToolBar"
-            />
+            <div class="my-2">
+                <ToolBar
+                    :icons="icons"
+                    @click="clickIconToolBar"
+                />
+            </div>
             <DataTable
                 :key="reload"
                 :headers="headers"
                 :actions="actions"
                 :dataset="projects"
-                :table="trnsl('content.projects')"
+                :title="trnsl('content.projects')"
                 fieldSearch="name"
-                @select="executeAction"
+                @action="getAction"
             />
         </template>
 
         <!-- MODAL -->
         <Modal
-            :show="modal"
-            @close="closeModal"
+            :showModal="modal"
+            @closeModal="closeModal"
+            :title="title"
+            modal-width="300px"
         >
-            <h3 class="px-5 py-3 font-semibold text-blue-500 bg-gray-100">
-                {{ title }}
-            </h3>
 
             <Form
                 :fields="fields"
                 :form="form"
-                :table="trnsl('content.projects')"
                 :routePath="routePath"
                 :operation="operation"
-                @submit="confirmTransaction"
+                @submit="getEvent"
                 :acceptText="trnsl('content.save')"
             />
         </Modal>
@@ -57,9 +57,8 @@
     import Modal from '@/Components/Modal.vue'
     import ToolBar from '@/Components/ToolBar.vue'
     import { useForm, Head, usePage, router } from '@inertiajs/vue3';
-    import Swal from 'sweetalert2';
     import { trnsl } from '@/Lang/languages';
-    import { successMessage, errorMessage } from '@/Helpers/helper'
+    import { successMessage, errorMessage, dialogBox } from '@/Helpers/helper'
     import { ref, onMounted } from 'vue';
 
     const props = defineProps({
@@ -86,36 +85,29 @@
     const routePath = ref('');
 
     const headers = [
-                    {name: 'name', text: trnsl('content.name'), align: 'left'},
-                    {name: 'subsidiary.name', text: trnsl('content.subsidiary'), align: 'left'},
-                ];
+        {name: 'name', type: 'text', text: trnsl('content.name'), align: 'left'},
+        {name: 'subsidiary.name', type: 'text', text: trnsl('content.subsidiary'), align: 'left'},
+    ];
 
     const actions = [
-                    {name: 'edit', type: 'icon', text: trnsl('content.edit'), icon: 'fa fa-pencil', color: 'primary'},
-                    {name: 'delete', type: 'icon', text: trnsl('content.delete'), icon: 'fa fa-trash', color: 'danger' },
-                ];
+        {name: 'edit', type: 'icon', text: trnsl('content.edit'), icon: 'fa fa-pencil', color: 'primary'},
+        {name: 'delete', type: 'icon', text: trnsl('content.delete'), icon: 'fa fa-trash', color: 'danger' },
+    ];
     
     const fields = [
-                    {name: 'id', type: 'hidden'},
-                    {name: 'subsidiary_id', type: 'select', text: trnsl('content.subsidiary'), style: 'sm:col-span-4', items:[]},
-                    {name: 'name', type: 'text', text: trnsl('content.name'), style: 'sm:col-span-4', lenght: 255 },
-                    {name: 'code', type: 'text', text: trnsl('content.code'), style: 'sm:col-span-1', lenght: 255 },
-                    {name: 'taxId', type: 'text', text: trnsl('content.taxId'), style: 'sm:col-span-1', lenght: 255 },
-                    {name: 'city_id', type: 'select', text: trnsl('content.city'), style: 'sm:col-span-2', items:[]},
-                ];
+        {name: 'subsidiary_id', type: 'select', text: trnsl('content.subsidiary'), style: 'sm:col-span-4', items:[]},
+        {name: 'name', type: 'text', text: trnsl('content.name'), style: 'sm:col-span-4', length: 255 },
+        {name: 'code', type: 'text', text: trnsl('content.code'), style: 'sm:col-span-1', length: 255 },
+        {name: 'taxId', type: 'text', text: trnsl('content.taxId'), style: 'sm:col-span-1', length: 255 },
+        {name: 'city_id', type: 'select', text: trnsl('content.city'), style: 'sm:col-span-2', items:[]},
+    ];
     
-                const buttons = [
-                    {name: 'new', text: trnsl('content.new'), icon: 'fa fa-plus'},
-                    {name: 'exit', text: trnsl('content.exit'), icon: 'fa-solid fa-arrow-up-right-from-square'}
-                ];
+    const icons = [
+        {name: 'home', text: trnsl('content.home'), icon: 'fa fa-home'},
+        {name: 'new', text: trnsl('content.new'), icon: 'fa fa-plus'},
+    ];
     
-    const formReset = () => {
-        fields.forEach( (row, i) => {
-            if (row['preserve']==null) {
-                form.reset(row['name'])
-            }
-        })
-    }
+    
 
     const openModal = ( row ) => {
         modal.value = true;
@@ -124,7 +116,8 @@
     const closeModal = () => {
         modal.value = false;
         reload.value += 1;
-        formReset();
+        form.reset()
+        form.clearErrors()
     }
     
     const home = () => {
@@ -133,22 +126,8 @@
 
     //Delete Record
     const deleteRecord = (row) => {
-        const alert = Swal.mixin({
-            buttonsStyling:true
-        });
-        alert.fire({
-            toast: true,
-            titleText: row.name,
-            text: trnsl('messages.confirmDelete'),
-            icon: 'question', 
-            showCancelButton:true,
-            confirmButtonText: '<i class="fa fa-check"></i>' + ' ' + trnsl('content.delete'),
-            cancelButtonText: '<i class="fa fa-ban"></i>' + ' ' + trnsl('content.cancel'),
-            showClass: {
-                popup: '',
-                icon: '',
-            },
-        }).then((result) =>{
+        const dialog = dialogBox( row.name, trnsl('messages.confirmDelete'))
+        dialog.fire().then((result) =>{
             if(result.isConfirmed){
                 form.delete(route('settings.projects.destroy', row.id),{
                     onSuccess: () => { 
@@ -163,34 +142,28 @@
         });
     }
 
-    const executeAction = ( params ) => {
-        if (params[1]==='edit') {
+    const getAction = ( action ) => {
+        if (action.name==='edit') {
             operation.value = 'update'
             routePath.value = 'settings.projects.update'
             title.value = trnsl('content.edit') + ' ' + trnsl('content.projects')
             fields.forEach( (field) => {
-                form[field.name]=params[0][field.name];
+                form[field.name]=action.data[field.name];
             })
             openModal()
-        } else if (params[1]==='delete') {
-            deleteRecord(params[0])
+        } else if (action.name==='delete') {
+            deleteRecord(action.data)
         }
     }
 
-    const confirmTransaction = ( params ) => {
-        if (params[1]==='store'){
-            if (params[0]==1){
-                successMessage(trnsl('messages.recordSaved'))
+    const getEvent = ( event ) => {
+        if (event.action==='store'){
+            if (event.status==1){
                 closeModal()
-            } else {
-                errorMessage(trnsl('messages.recordNoSaved'))
             } 
-        } else if ((params[1]==='update')||(params[1]==='updateWithFile')) {
-            if (params[0]==1){
-                successMessage(trnsl('messages.recordUpdated')) 
+        } else if ((event.action==='update')||(event.action==='updateWithFile')) {
+            if (event.status==1){
                 closeModal()
-            } else {
-                errorMessage(trnsl('messages.recordNoUpdated'))
             } 
         } else {
             closeModal()
@@ -203,14 +176,14 @@
             routePath.value = 'settings.projects.store'
             title.value = trnsl('content.create') + ' ' + trnsl('content.projects')
             openModal()
-        } else if (button == 'exit') {
+        } else if (button == 'home') {
             home()
         }
     }
 
     onMounted(() => {
-        fields[1].items = props.subsidiaries;
-        fields[5].items = props.cities;
+        fields[0].items = props.subsidiaries;
+        fields[4].items = props.cities;
     }) 
 
 </script>

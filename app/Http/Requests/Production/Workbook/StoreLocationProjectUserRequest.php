@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Workbook;
+namespace App\Http\Requests\Production\Workbook;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -14,11 +14,9 @@ class StoreLocationProjectUserRequest extends FormRequest
     public function rules()
     {
         return [
-            'location_id'=>'required',
+            'locations'=>'required',
             'project_user_id'=>'required',
-            'dailyreport_collaborator'=>'nullable',
-            'dailyreport_approver'=>'nullable',
-            'folio_approver'=>'nullable',
+            'profile'=>'required',
             'receive_notification'=>'nullable',
         ];
     }

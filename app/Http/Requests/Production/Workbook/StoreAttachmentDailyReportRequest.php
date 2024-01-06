@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Workbook;
+namespace App\Http\Requests\Production\Workbook;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -15,7 +15,8 @@ class StoreAttachmentDailyReportRequest extends FormRequest
     {
         return [
             'daily_report_id'=>'required',
-            'image'=>'required',
+            'file'=>'required',
+            'description'=>'nullable',
             'project_user_id'=>'required',
         ];
     }

@@ -12,60 +12,55 @@
         </template>
 
         <template #content>
-            <ToolBar
-                :buttons="buttons"
-                @click="clickIconToolBar"
-            />
-            <DataTable
+            <div class="my-2">
+                <ToolBar
+                    :icons="icons"
+                    @click="clickIconToolBar"
+                />
+            </div>
+           
+            <List
+                v-if="list"
                 :key="reload"
-                :headers="headers"
-                :actions="actions"
-                :dataset="stakeholders"
-                :table="trnsl('content.stakeholders')"
-                fieldSearch="name"
-                @select="executeAction"
+                :items="stakeholders"
+                @event="getEvent"
+            />
+            
+            <New
+                v-if="new_"
+                :form="formNew"
+                :regions="regions"
+                :project="project"
+                @event="getEvent"       
+            />
+
+            <Edit
+                v-if="edit"
+                :form="formEdit"
+                :regions="regions"
+                :project="project"
+                @event="getEvent"       
             />
         </template>
-
-        <!-- MODAL -->
-        <Modal
-            :show="modal"
-            @close="closeModal"
-        >
-            <h3 class="px-5 py-3 font-semibold text-blue-500 bg-gray-100">
-                {{ title }}
-            </h3>
-
-            <Form
-                :fields="fields"
-                :form="form"
-                :table="trnsl('content.stakeholders')"
-                :routePath="routePath"
-                :operation="operation"
-                @submit="confirmTransaction"
-            />
-        </Modal>
         
     </AuthenticatedLayout>
 </template>
 
 <script setup>
     import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
-    import DataTable from '@/Components/DataTable.vue'
-    import Form from '@/Components/Form.vue'
-    import Modal from '@/Components/Modal.vue'
     import ToolBar from '@/Components/ToolBar.vue'
+    import List from './List.vue'
+    import New from './New.vue'
+    import Edit from './Edit.vue'
     import { useForm, Head, usePage, router } from '@inertiajs/vue3';
-    import Swal from 'sweetalert2';
     import { trnsl } from '@/Lang/languages';
-    import { successMessage, errorMessage } from '@/Helpers/helper'
+    import { successMessage, errorMessage, dialogBox } from '@/Helpers/helper'
     import { ref, onMounted } from 'vue';
 
     const props = defineProps({
         stakeholders: Array,
-        projects: Array,
-        cities: Array,
-        stakeholderTypes: Array,
+        project: Object,
+        regions: Array,
     });
 
     const page = usePage()
@@ -91,6 +86,9 @@
         'project_id': '',
         'code': '',
         'taxId': '',
+        'region_id': '',
+        'country_id': '',
+        'state_id': '',
         'city_id': '',
         'address': '',
         'zipCode': '',
@@ -104,153 +102,83 @@
     let form = useForm({})
 
     const reload = ref(0)
-    const modal = ref(false)
-    const title = ref('');
-    const operation = ref('');
-    const routePath = ref('');
 
-    const headers = [
-                    {name: 'name', type: 'text', text: trnsl('content.name'), align: 'left'},
-                    {name: 'logofile', type: 'image', text: trnsl('content.logo'), align: 'center', path: 'http://delta.test/storage/kapatax/images/stakeholders/'},
-                ];
+    const new_ = ref(false)
+    const edit = ref(false)
+    const list = ref(true)
     
-    const actions = [
-                    {name: 'edit', type: 'icon', text: trnsl('content.edit'), icon: 'fa fa-pencil', color: 'primary'},
-                    {name: 'delete', type: 'icon', text: trnsl('content.delete'), icon: 'fa fa-trash', color: 'danger' },
-                ];
-    
-    const fields = [
-                    {name: 'id', type: 'hidden'},
-                    {name: 'project_id', type: 'select', text: trnsl('content.project'),style: 'sm:col-span-4', items:[], disabled: true, preserve: true},
-                    {name: 'name', type: 'text', text: trnsl('content.name'), style: 'sm:col-span-4',lenght: 255, disabled: false },
-                    {name: 'code', type: 'text', text: trnsl('content.code'), style: 'sm:col-span-2',lenght: 255, disabled: false },
-                    {name: 'taxId', type: 'text', text: trnsl('content.taxId'), style: 'sm:col-span-2',lenght: 255, disabled: false},
-                    {name: 'city_id', type: 'select', text: trnsl('content.city'), style: 'sm:col-span-2', items:[], disabled: false},
-                    {name: 'zipCode', type: 'text', text: trnsl('content.zipCode'), style: 'sm:col-span-2',lenght: 255, disabled: false},
-                    {name: 'address', type: 'text', text: trnsl('content.address'), style: 'sm:col-span-4',lenght: 255, disabled: false},
-                    {name: 'email', type: 'email', text: trnsl('content.email'), style: 'sm:col-span-2',lenght: 255, disabled: false},
-                    {name: 'phoneNumber', type: 'text', text: trnsl('content.phoneNumber'), style: 'sm:col-span-2',lenght: 255, disabled: false},
-                    {name: 'logofile', type: 'file', text: trnsl('content.logo'), style: 'sm:col-span-2', accept: 'image/png, .jpg', disabled: false},
-                    {name: 'stakeholder_type_id', type: 'select', text: trnsl('content.type'), style: 'sm:col-span-2', items:[], disabled: false}, 
-                ];
-    
-    const buttons = [
-                    {name: 'new', text: trnsl('content.new'), icon: 'fa fa-plus'},
-                    {name: 'exit', text: trnsl('content.exit'), icon: 'fa-solid fa-arrow-up-right-from-square'}
-                ];
-
-    const formReset = () => {
-        fields.forEach( (row, i) => {
-            if (row['preserve']==null) {
-                formNew.reset(row['name'])
-                formEdit.reset(row['name'])
-            }
-        })
-    }
-
-    const openModal = ( row ) => {
-        modal.value = true;
-    }
-
-    const closeModal = () => {
-        modal.value = false;
-        reload.value += 1;
-        formReset();
-    }
+    const icons = [
+        {name: 'home', text: trnsl('content.home'), icon: 'fa fa-home'},
+        {name: 'new', text: trnsl('content.new'), icon: 'fa fa-plus'},
+        {name: 'list', text: trnsl('content.list'), icon: 'fa fa-table'},
+    ];
     
     const home = () => {
         router.visit(route('dashboard'))
     } 
 
-    //Delete Record
     const deleteRecord = (row) => {
-        const alert = Swal.mixin({
-            buttonsStyling:true
-        });
-        alert.fire({
-            toast: true,
-            titleText: row.name,
-            text: trnsl('messages.confirmDelete'),
-            icon: 'question', 
-            showCancelButton:true,
-            confirmButtonText: '<i class="fa fa-check"></i>' + ' ' + trnsl('content.delete'),
-            cancelButtonText: '<i class="fa fa-ban"></i>' + ' ' + trnsl('content.cancel'),
-            showClass: {
-                popup: '',
-                icon: '',
-            },
-        }).then((result) =>{
+        const dialog = dialogBox( row.name, trnsl('messages.confirmDelete'))
+        dialog.fire().then((result)=>{
             if(result.isConfirmed){
-                form.delete(route('project.stakeholders.destroy', row.id),{
+                formNew.delete(route('project.stakeholders.destroy', row.id),{
                     onSuccess: () => { 
                         successMessage(trnsl('messages.recordDeleted'))
-                        reload.value += 1;
+                        reload.value += 1
                     },
                     onError: () => {
                         errorMessage(trnsl('messages.recordNoDeleted'))
                     }
                 })
             }
-        });
-    }
-
-    const executeAction = ( params ) => {
-        if (params[1]==='edit') {
-            form = formEdit
-            operation.value = 'updateWithFile'
-            routePath.value = 'project.stakeholders.update'
-            title.value = trnsl('content.edit') + ' ' + trnsl('content.stakeholders')
-            fields.forEach( (field) => {
-                form[field.name]=params[0][field.name];
-            })
-            openModal()
-        } else if (params[1]==='delete') {
-            deleteRecord(params[0])
-        }
-    }
-
-    const confirmTransaction = ( params ) => {
-        if (params[1]==='store'){
-            if (params[0]==1){
-                successMessage(trnsl('messages.recordSaved'))
-                closeModal()
-            } else {
-                errorMessage(trnsl('messages.recordNoSaved'))
-            } 
-        } else if ((params[1]==='update')||(params[1]==='updateWithFile')) {
-            if (params[0]==1){
-                successMessage(trnsl('messages.recordUpdated')) 
-                closeModal()
-            } else {
-                errorMessage(trnsl('messages.recordNoUpdated'))
-            } 
-        } else {
-            closeModal()
-        }
+        })
     }
 
     const clickIconToolBar = (button) => {
-        if (button === 'new') {
-            form = formNew
-            operation.value = 'store'
-            routePath.value = 'project.stakeholders.store'
-            title.value = trnsl('content.create') + ' ' + trnsl('content.stakeholders')
-            openModal()
-        } else if (button == 'exit') {
-            home()
-        }
+        if (button === 'list') {
+            new_.value = false
+            edit.value = false
+            list.value = true
+        } else if (button == 'new') {
+                    formNew.reset()
+                    formNew.project_id = page.props.auth.currentProject.id
+                    list.value = false
+                    edit.value = false
+                    new_.value = true
+                } else if (button == 'back') {
+                            back()
+                        } else if (button == 'home') {
+                                    home()
+                                }
     }
 
-    onMounted(() => {
-        
-        fields[1].items = props.projects;
-        fields[5].items = props.cities;
-        fields[11].items = props.stakeholderTypes;
-        formNew.project_id = page.props.auth.currentProject[0].id
-    }) 
-
-    
-
-    
+    const getEvent = ( event ) => {
+        if (event.status==='edit') {
+            formEdit.id = event.action.id
+            formEdit.project_id = event.action.project_id
+            formEdit.region_id = event.action.region_id
+            formEdit.country_id = event.action.country_id
+            formEdit.state_id = event.action.state_id
+            formEdit.city_id = event.action.city_id
+            formEdit.name = event.action.name
+            formEdit.code = event.action.code
+            formEdit.taxId = event.action.taxId
+            formEdit.address = event.action.address
+            formEdit.zipCode = event.action.zipCode
+            formEdit.phoneNumber = event.action.phoneNumber
+            formEdit.email = event.action.email
+            formEdit.logofile = event.action.logofile
+            formEdit.stakeholder_type_id = event.action.stakeholder_type_id
+            new_.value = false
+            list.value = false
+            edit.value = true
+        } else if (event.status==='delete') {
+                    deleteRecord(event.action)
+                } else {
+                    new_.value = false
+                    edit.value = false
+                    list.value = true
+                }
+    }
 
 </script>

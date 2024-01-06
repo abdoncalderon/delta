@@ -23,6 +23,7 @@ class CreateEquipmentDailyReportsTable extends Migration
             $table->foreign('equipment_id')->references('id')->on('equipments')->onUpdate('cascade')->onDelete('restrict');
             $table->integer('quantity');
             $table->boolean('approved')->default(false);
+            $table->unique(['daily_report_id','stakeholder_id','equipment_id'],'daily_report_stakeholder_equipment_unique');
             $table->timestamps();
         });
     }

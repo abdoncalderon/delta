@@ -26,6 +26,7 @@ class CreateDailyReportsTable extends Migration
             $table->unsignedBigInteger('approvedby')->nullable();
             $table->unsignedBigInteger('reviewedby')->nullable();
             $table->unsignedBigInteger('responsible')->nullable();
+            $table->unique(['folio_id','turn_id'],'folio_turn_unique');
             $table->timestamps();
         });
     }

@@ -67,13 +67,13 @@ if (! function_exists('menu_access_users')) {
     {
         $menu = Menu::where('code',$code)->first();
         $projectUsers = ProjectUser::select('project_users.*')
-                                    ->join('project_roles','project_users.project_role_id','=','project_roles.id')
-                                    ->join('roles','project_roles.role_id','=','roles.id')
-                                    ->join('role_menus','roles.id','=','role_menus.role_id')
-                                    ->join('menus','role_menus.menu_id','=','menus.id')
-                                    ->where('menus.id',$menu->id)
-                                    ->where('project_users.project_id',current_user()->project_id)
-                                    ->get();
+                    ->join('project_roles','project_users.project_role_id','=','project_roles.id')
+                    ->join('roles','project_roles.role_id','=','roles.id')
+                    ->join('role_menus','roles.id','=','role_menus.role_id')
+                    ->join('menus','role_menus.menu_id','=','menus.id')
+                    ->where('menus.id',$menu->id)
+                    ->where('project_users.project_id',current_user()->project_id)
+                    ->get();
         
         return $projectUsers;
     }
@@ -170,8 +170,10 @@ if (! function_exists('is_valid_date_for_location')) {
     {
         $startDateLocation=strtotime($location->startDate);
         $finishDateLocation=strtotime($location->finishDate);
+        
         if ((strtotime($date)>=$startDateLocation)&&(strtotime($date)<=$finishDateLocation)){
             return true;
+            dd('entro');
         } else {
             return false;
         }
@@ -331,7 +333,6 @@ if (! function_exists('is_valid_date_for_edit_admission')) {
 }
 
 
-
 if (! function_exists('is_active_stakeholder_person')) {
     function is_active_stakeholder_person(Person $person)
     {
@@ -375,9 +376,9 @@ if (! function_exists('update_need_request_items_status')) {
 if (! function_exists('my_pending_requests')) {
     function my_pending_requests()
     {
-        $pendingRequests = NeedRequest::where('applicant_id',current_user()->id)
-                                        ->where('status_id','<',5)
-                                        ->get();
+        $pendingRequests = NeedRequest::where('project_user_id',current_user()->id)
+            ->where('status_id','<',5)
+            ->get();
         return $pendingRequests->count();
     }
 }
@@ -385,9 +386,9 @@ if (! function_exists('my_pending_requests')) {
 if (! function_exists('my_pending_approvals_requests')) {
     function my_pending_approvals_requests()
     {
-        $pendingApprovals = NeedRequest::where('approver_id',current_user()->user->person_id)
-                                        ->where('status_id',1)
-                                        ->get();
+        $pendingApprovals = NeedRequest::where('approver_id', current_user()->id)
+            ->where('status_id', 2)
+            ->get();
         return $pendingApprovals->count();
     }
 }

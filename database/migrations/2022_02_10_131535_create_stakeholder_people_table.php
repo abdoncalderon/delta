@@ -27,8 +27,9 @@ class CreateStakeholderPeopleTable extends Migration
             $table->foreign('department_id')->references('id')->on('departments')->onUpdate('cascade')->onDelete('restrict');
             $table->unsignedBigInteger('leader_id')->nullable();
             $table->string('businessEmail')->nullable();
-            $table->date('hiredSince')->nullable();
-            $table->date('contractedUntil')->nullable();
+            $table->integer('cardNo')->unique();
+            $table->date('hiredSince');
+            $table->date('hiredUntil')->nullable();
             $table->decimal('salary',8,2)->nullable();
             $table->string('contractFile')->nullable();
             $table->boolean('isApprover')->default(false);

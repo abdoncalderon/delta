@@ -10,6 +10,6 @@ use Inertia\Inertia;
 class HomeController extends Controller
 {
     public function home() {
-        return Inertia::render('Administration/Technology/Index');
+        return Inertia::render('Administration/Technology/Home');
     }
 }

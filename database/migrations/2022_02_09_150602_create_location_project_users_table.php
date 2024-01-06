@@ -19,9 +19,7 @@ class CreateLocationProjectUsersTable extends Migration
             $table->foreign('location_id')->references('id')->on('locations')->onUpdate('cascade')->onDelete('restrict');
             $table->foreignId('project_user_id');
             $table->foreign('project_user_id')->references('id')->on('project_users')->onUpdate('cascade')->onDelete('restrict');
-            $table->boolean('dailyreport_collaborator')->default(false);
-            $table->boolean('dailyreport_approver')->default(false);
-            $table->boolean('folio_approver')->default(false);
+            $table->integer('profile')->default(1);
             $table->boolean('receive_notification')->default(false);
             $table->unique(['project_user_id','location_id'],'project_user_location_unique');
             $table->timestamps();

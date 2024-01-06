@@ -1,12 +1,12 @@
 <template>
     <select 
-        class="block mt-1 w-full rounded-md focus:border-indigo-600" 
+        class="block px-2 py-1 text-xs w-full rounded-md focus:border-indigo-600 disabled:opacity-50" 
         :value="modelValue" 
-        @change="$emit('update:modelValue', $event.target.value)" 
+        @change="changeValue" 
         ref="input"
         :disabled="disabled"
     >
-        <option v-for="option in options" :key="option.id" :value="option.id">{{ option.name }}</option>
+        <option v-for="option in options" :key="option.id" :value="option[idField]">{{ option[showField] }}</option>
     </select>
 </template>
 
@@ -14,11 +14,32 @@
 
     import { onMounted, ref } from 'vue';
 
-    defineProps(['modelValue','options', 'disabled']);
+    const props = defineProps({
+        'modelValue': null,
+        'options': Array, 
+        'disabled': Boolean, 
+        'idField': {
+            type: String, 
+            default: 'id'
+        },
+        'showField': {
+            type: String, 
+            default: 'name'
+        },
+        
+    })
 
-    defineEmits(['update:modelValue']);
+    const emit = defineEmits([
+        'update:modelValue',
+        'change'
+    ])
 
     const input = ref(null);
+
+    const changeValue = ( event ) => {
+        emit('update:modelValue', event.target.value)
+        emit('change', event.target.value)
+    } 
 
     onMounted(() => {
         if (input.value.hasAttribute('autofocus')) {

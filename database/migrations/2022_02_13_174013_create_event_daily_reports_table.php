@@ -17,13 +17,14 @@ class CreateEventDailyReportsTable extends Migration
             $table->id();
             $table->foreignId('daily_report_id');
             $table->foreign('daily_report_id')->references('id')->on('daily_reports')->onUpdate('cascade')->onDelete('restrict');
-            $table->string('cause');
+            $table->integer('cause');
             $table->time('start');
             $table->time('finish');
             $table->text('description');
             $table->boolean('haveImpact')->default(false);
             $table->foreignId('project_user_id');
             $table->foreign('project_user_id')->references('id')->on('project_users')->onUpdate('cascade')->onDelete('restrict');
+            
             $table->timestamps();
         });
     }

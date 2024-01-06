@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class NeedRequestItem extends Model
 {
-    protected $fillable = ['need_request_id','reference','quantity','unity_id','status_id', 'class_id'];
+    protected $fillable = ['need_request_id','reference','quantity','unity_id','status_id', 'class_id', 'attachment'];
 
     public function needRequest(){
         return $this->belongsTo(NeedRequest::class);

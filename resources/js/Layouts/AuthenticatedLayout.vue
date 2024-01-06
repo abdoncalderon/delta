@@ -8,7 +8,7 @@
 
             <Header/>
 
-            <main class="flex-1 overflow-y-auto overflow-x-hidden bg-gray-200">
+            <main class="flex-1 overflow-y-auto overflow-x-hidden bg-gray-100">
 
                 <div class="container mx-auto px-3 py-2">
 

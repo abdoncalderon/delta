@@ -8,6 +8,6 @@ use Inertia\Inertia;
 class HomeController extends Controller
 {
     public function home() {
-        return Inertia::render('Production/WorkBook/Index');
+        return Inertia::render('Production/WorkBook/Home');
     }
 }

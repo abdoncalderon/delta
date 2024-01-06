@@ -14,10 +14,12 @@
 
         <template #content>
 
-            <ToolBar
-                :buttons="buttons"
-                @click="clickIconToolBar"
-            />
+            <div class="my-2">
+                <ToolBar
+                    :icons="icons"
+                    @click="clickIconToolBar"
+                />
+            </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-8 gap-2 p-2 mb-2 bg-white rounded-lg shadow-md">
                
@@ -25,13 +27,11 @@
                     <InputLabel 
                         for="fromDate" 
                         :value="trnsl('content.from')"
-                        class="ml-1 text-xs font-bold"
                     ></InputLabel>
                     <TextInput 
                         id="fromDate" 
                         v-model="formFilter.fromDate"
                         type="date"
-                        class="text-xs mt-1"
                     ></TextInput>
                     
                 </div>
@@ -39,13 +39,11 @@
                     <InputLabel 
                         for="untilDate" 
                         :value="trnsl('content.until')"
-                        class="ml-1 text-xs font-bold"
                     ></InputLabel>
                     <TextInput 
                         id="untilDate" 
                         v-model="formFilter.untilDate"
                         type="date"
-                        class="text-xs mt-1"
                     ></TextInput>
                    
                 </div>
@@ -53,23 +51,22 @@
                     <InputLabel 
                         for="location" 
                         :value="trnsl('content.location')"
-                        class="ml-1 text-xs font-bold"
+                        
                     ></InputLabel>
                     <SelectInput 
                         id="location"
                         :options="locations"
                         v-model="formFilter.location_id"
-                        class="mt-1 text-xs"
                     ></SelectInput>
-                    
                 </div>
-                <div class="col-span-1 sm:cols-span-1 text-center mt-4">
-                    <PrimaryButton
+                <div class="col-span-1 sm:cols-span-1 text-center">
+                    <button
+                        class="w-full mt-4 py-1 text-xs text-white bg-green-500 rounded-lg"
                         :disabled="formFilter.processing"
                         @click="search"
                     >
                         {{  $trnsl('content.search') }}
-                    </PrimaryButton>
+                    </button>
                 </div>
             </div>
 
@@ -78,31 +75,28 @@
                 :headers="headers"
                 :actions="actions"
                 :dataset="results"
-                :table="trnsl('content.folios')"
+                :title="trnsl('content.folios')"
                 fieldSearch="name"
-                @select="executeAction"
+                @action="getAction"
             />
 
             <Modal
-                :show="modal"
-                @close="closeModal"
+                :showModal="modal"
+                @closeModal="closeModal"
+                :title="trnsl('content.new')+' '+$trnsl('content.folio')"
             >
-                <h3 class="px-5 py-3 font-semibold text-blue-500 bg-gray-100">
-                    {{ $trnsl('content.new')+' '+$trnsl('content.folio') }}
-                </h3>
+               
 
                 <div class="grid grid-cols-1 sm:grid-cols-5 gap-2 px-3 py-3">
                     <div class="col-span-1 sm:col-span-1" >
                         <InputLabel 
                             for="date" 
                             :value="trnsl('content.date')"
-                            class="ml-1 text-xs font-bold"
                         ></InputLabel>
                         <TextInput 
                             id="date" 
                             v-model="formFolio.date"
                             type="date"
-                            class="text-xs mt-1"
                         ></TextInput>
                         <InputError 
                             :message="formFolio.errors.date"
@@ -113,13 +107,12 @@
                         <InputLabel 
                             for="location" 
                             :value="trnsl('content.location')"
-                            class="ml-1 text-xs font-bold"
+                            
                         ></InputLabel>
                         <SelectInput 
                             id="location"
                             :options="locations"
                             v-model="formFolio.location_id"
-                            class="mt-1 text-xs"
                             @change="setFolioNumber"
                         ></SelectInput>
                         <InputError 
@@ -165,7 +158,7 @@
     import SecondaryButton from '@/Components/SecondaryButton.vue'
     import ToolBar from '@/Components/ToolBar.vue'
     import { trnsl } from '@/Lang/languages';
-    import { successMessage, errorMessage } from '@/Helpers/helper'
+    import { successMessage, errorMessage, dialogBox, getError } from '@/Helpers/helper'
     import { useForm, Head, usePage, router } from '@inertiajs/vue3';
     import { ref, reactive, onMounted } from 'vue';
     import axios from 'axios';
@@ -180,8 +173,8 @@
     const page = usePage();
 
     const formFilter = {
-        'fromDate': null,
-        'untilDate': null,
+        'fromDate': dayjs(undefined).format('YYYY-MM-DD'),
+        'untilDate': dayjs(undefined).format('YYYY-MM-DD'),
         'location_id': '',
     }
 
@@ -191,6 +184,8 @@
         'project_user_id': '',
         'number':'',
     });
+
+    
 
     const reload = ref(0)
     const results = reactive([])
@@ -208,7 +203,7 @@
                     {name: 'print', type: 'badge', text: trnsl('content.print'),  color: 'primary' },
                 ];
 
-    const buttons = [
+    const icons = [
                     {name: 'home', text: trnsl('content.home'), icon: 'fa-solid fa-home'},
                     {name: 'back', text: trnsl('content.back'), icon: 'fa-solid fa-arrow-left'},       
                     {name: 'new', text: trnsl('content.new'), icon: 'fa fa-plus'},
@@ -229,7 +224,7 @@
     const closeModal = () => {
         modal.value = false;
         reload.value += 1;
-        formFolio.reset
+        formFolio.clearErrors()
     }
 
     const search = () => {
@@ -248,11 +243,11 @@
             })
     }
     
-    const executeAction = ( params ) => {
-        if (params[1]==='dailyReports') {
-            router.get(route('production.workbook.dailyReports.index',params[0].id))
-        } else if (params[1]==='notes') {
-                    
+    const getAction = ( action ) => {
+        if (action.name==='dailyReports') {
+            router.get(route('production.workbook.dailyReports.index',action.data.id))
+        } else if (action.name==='notes') {
+                    router.get(route('production.workbook.notes.index',action.data.id))
                 }
     }
     
@@ -277,6 +272,8 @@
             })
     }
 
+    
+
     const storeFolio = () => {
         formFolio.post(route('production.workbook.folios.store'),{
             onSuccess: () => { 
@@ -285,16 +282,14 @@
                 search()
             },
             onError: (errors) => {
-                errorMessage(trnsl('messages.recordNoSaved'))
+                errorMessage(trnsl('messages.recordNoSaved') + '\n\r '+ getError(errors))
                 console.log(errors)
             }
         })
     }
 
     onMounted(() => {
-        var now = dayjs(undefined).format('MM-DD-YYYY')
-        console.log(now)
-        formFilter.fromDate = dayjs(undefined).format('MM-DD-YYYY')
+
     })
 
     

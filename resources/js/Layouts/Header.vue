@@ -1,5 +1,6 @@
 <template>
-    <header class="flex items-center justify-between border-b-2 border-neutral-700 bg-sky-600 px-6 py-3">
+    <header class="flex items-center justify-between border-b-1 border-neutral-700 bg-gray-800 px-3 py-3">
+
         <div class="flex items-center">
             <button @click="$page.props.showingMobileMenu = !$page.props.showingMobileMenu" class="text-white focus:outline-none lg:hidden">
                 <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -8,19 +9,18 @@
             </button>
         </div>
 
-        
-
         <div class="flex items-center">
              
             <dropdown>
                 <template #trigger>
                     <button @click="dropdownOpen = ! dropdownOpen" class="relative block overflow-hidden text-white">
-                        <p>{{ $page.props.auth.person.fullName }}</p>
+                        <p>{{ $page.props.auth.currentPerson.fullName }}</p>
                         <p class="text-xs">{{ $page.props.auth.user.email }}</p>
                     </button>
                 </template>
 
                 <template #content>
+
                     <dropdown-link :href="route('profile.edit')">
                         <i class="fa fa-user"></i>
                         {{ $trnsl('content.profile') }}
@@ -35,6 +35,7 @@
                         <i class="fa fa-right-from-bracket"></i>
                         {{ $trnsl('content.logout') }}
                     </dropdown-link>
+
                 </template>
             </dropdown>
         </div>

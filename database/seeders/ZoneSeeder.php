@@ -15,7 +15,17 @@ class ZoneSeeder extends Seeder
     public function run()
     {
         DB::table('zones')->insert([
-            'name' => 'Zone Example',
+            'name' => 'Tramo Norte',
+            'project_id' => '1',
+        ]);
+
+        DB::table('zones')->insert([
+            'name' => 'Tramo Centro',
+            'project_id' => '1',
+        ]);
+
+        DB::table('zones')->insert([
+            'name' => 'Tramo Sur',
             'project_id' => '1',
         ]);
     }

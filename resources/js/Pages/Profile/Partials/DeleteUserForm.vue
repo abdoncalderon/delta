@@ -32,7 +32,7 @@ const deleteUser = () => {
 
 const closeModal = () => {
     confirmingUserDeletion.value = false;
-
+    form.clearErrors()
     form.reset();
 };
 </script>

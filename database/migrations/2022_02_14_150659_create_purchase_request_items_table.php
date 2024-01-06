@@ -22,6 +22,7 @@ class CreatePurchaseRequestItemsTable extends Migration
             $table->text('reference');
             $table->integer('quantity');
             $table->foreignId('unity_id');
+            $table->string('attachment')->nullable();
             $table->foreign('unity_id')->references('id')->on('unities')->onUpdate('cascade')->onDelete('restrict');
             $table->timestamps();
         });

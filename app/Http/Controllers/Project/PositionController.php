@@ -75,4 +75,13 @@ class PositionController extends Controller
             return back()->withErrors( $e->getMessage());
         }
     }
+
+    public function getPositions(Request $request, $id)
+    {
+        if($request->ajax())
+        {
+            $positions = Position::where('function_id',$id)->get();
+            return response()->json($positions);
+        }
+    }
 }

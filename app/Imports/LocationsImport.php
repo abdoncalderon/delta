@@ -25,6 +25,7 @@ class LocationsImport implements ToModel, WithHeadingRow, SkipsOnError, WithVali
     {
         $this->zones = Zone::pluck('id','name');
     }
+    
     public function model(array $row)
     {
         return new Location([

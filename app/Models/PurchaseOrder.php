@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class PurchaseOrder extends Model
 {
-    protected $fillable = ['quotation_id','sendDate','buyer_user_id','approver_id','status_id'];
+    protected $fillable = ['quotation_id','sendDate','buyer_id','approver_id','status_id'];
 
     public function quotation()
     {
@@ -15,7 +15,7 @@ class PurchaseOrder extends Model
 
     public function buyer()
     {
-        return $this->belongsTo(ProjectUser::class,'buyer_user_id','id');
+        return $this->belongsTo(ProjectUser::class,'buyer_id','id');
     }
 
     public function approver()

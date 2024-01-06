@@ -17,10 +17,9 @@ class CreatePurchaseRequestsTable extends Migration
             $table->id();
             $table->foreignId('need_request_id');
             $table->foreign('need_request_id')->references('id')->on('need_requests')->onUpdate('cascade')->onDelete('restrict');
-            $table->foreignId('project_user_id');
-            $table->foreign('project_user_id')->references('id')->on('project_users')->onUpdate('cascade')->onDelete('restrict');
+            $table->unsignedBigInteger('sorter_id');
             $table->dateTime('date');
-            $table->integer('status_id')->default('0');
+            $table->integer('status_id')->default('1');
             $table->timestamps();
         });
     }

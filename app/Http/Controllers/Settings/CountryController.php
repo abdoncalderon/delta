@@ -52,15 +52,6 @@ class CountryController extends Controller
         }
     }
 
-    public function getStates(Request $request, $id)
-    {
-        if($request->ajax())
-        {
-            $states = State::where('country_id',$id)->get();
-            return response()->json($states);
-        }
-    }
-
     public function import(Request $request)
     {
         try{
@@ -80,5 +71,18 @@ class CountryController extends Controller
             return back()->withErrors( $e->getMessage());
         }
     }
+
+    
+
+    public function getCountries(Request $request, $id)
+    {
+        if($request->ajax())
+        {
+            $countries = Country::where('region_id',$id)->orderBy('name')->get();
+            return response()->json($countries);
+        }
+    }
+
+    
 
 }

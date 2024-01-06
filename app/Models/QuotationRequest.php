@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class QuotationRequest extends Model
 {
-    protected $fillable = ['purchase_request_id','stakeholder_id','sendDate','buyer_user_id','status_id',];
+    protected $fillable = ['purchase_request_id','stakeholder_id','sendDate','buyer_id','status_id',];
     
     public function purchaseRequest()
     {
@@ -20,7 +20,7 @@ class QuotationRequest extends Model
 
     public function buyer()
     {
-        return $this->belongsTo(ProjectUser::class,'buyer_user_id','id');
+        return $this->belongsTo(ProjectUser::class,'buyer_id','id');
     }
 
     public function status(){

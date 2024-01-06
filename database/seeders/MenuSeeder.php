@@ -248,13 +248,13 @@ class MenuSeeder extends Seeder
                             'icon' => 'fa fa-map',
                         ]);
 
-                        DB::table('menus')->insert([
+                        /* DB::table('menus')->insert([
                             'name' => 'project.periods',
                             'text' => 'content.periods',
                             'father' => 'projects',
                             'route' => 'project.periods.index',
                             'icon' => 'fa fa-map',
-                        ]);
+                        ]); 
 
                         DB::table('menus')->insert([
                             'name' => 'project.shifts',
@@ -262,13 +262,13 @@ class MenuSeeder extends Seeder
                             'father' => 'projects',
                             'route' => 'project.turns.index',
                             'icon' => 'fa fa-map',
-                        ]);
+                        ]);*/
 
                         DB::table('menus')->insert([
                             'name' => 'project.projectUsers',
                             'text' => 'content.users',
                             'father' => 'projects',
-                            'route' => 'project.users.index',
+                            'route' => 'project.projectUsers.index',
                             'icon' => 'fa fa-map',
                         ]);
 
@@ -456,13 +456,13 @@ class MenuSeeder extends Seeder
                             'name' => 'commercial.controls',
                             'text' => 'content.controls',
                             'father' => 'commercial',
-                            'route' => 'dashboard',
+                            'route' => 'commercial.controls.home',
                             'icon' => 'fa fa-square-check',
                         ]);
 
                                         /* DB::table('menus')->insert([
                                             'name' => 'commercial.controls.needRequests',
-                                            'text' => 'messages.needRequests',
+                                            'text' => 'content.needRequests',
                                             'father' => 'commercial.controls',
                                             'route' => 'dashboard',
                                             'icon' => 'fa fa-list',
@@ -490,7 +490,7 @@ class MenuSeeder extends Seeder
                             'name' => 'commercial.materials',
                             'text' => 'content.materials',
                             'father' => 'commercial',
-                            'route' => 'dashboard',
+                            'route' => 'commercial.materials.home',
                             'icon' => 'fa fa-cubes',
                         ]);
 
@@ -522,7 +522,7 @@ class MenuSeeder extends Seeder
                             'name' => 'commercial.purchases',
                             'text' => 'content.purchases',
                             'father' => 'commercial',
-                            'route' => 'dashboard',
+                            'route' => 'commercial.purchases.home',
                             'icon' => 'fa fa-shopping-cart',
                         ]);
 
@@ -679,19 +679,19 @@ class MenuSeeder extends Seeder
                             'icon' => 'fa fa-pencil',
                         ]);
 
-                        DB::table('menus')->insert([
+                        /* DB::table('menus')->insert([
                             'name' => 'people.payroll',
                             'text' => 'content.payroll',
                             'father' => 'people',
                             'route' => 'dashboard',
                             'icon' => 'fa fa-list',
-                        ]);
+                        ]); */
 
                         DB::table('menus')->insert([
                             'name' => 'people.timesheet',
                             'text' => 'content.timesheet',
                             'father' => 'people',
-                            'route' => 'dashboard',
+                            'route' => 'people.timesheet.home',
                             'icon' => 'fa fa-table',
                         ]); 
         

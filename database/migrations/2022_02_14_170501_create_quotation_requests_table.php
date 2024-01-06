@@ -20,8 +20,8 @@ class CreateQuotationRequestsTable extends Migration
             $table->foreignId('stakeholder_id');
             $table->foreign('stakeholder_id')->references('id')->on('stakeholders')->onUpdate('cascade')->onDelete('restrict');
             $table->dateTime('sendDate');
-            $table->unsignedBigInteger('buyer_user_id');
-            $table->integer('status_id')->default('0');
+            $table->unsignedBigInteger('buyer_id');
+            $table->integer('status_id')->default('1');
             $table->timestamps();
         });
     }

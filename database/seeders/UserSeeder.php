@@ -23,21 +23,21 @@ class UserSeeder extends Seeder
         ]);
 
         DB::table('users')->insert([
-            'user' => 'acalderon4642',
+            'user' => 'acalderon42',
             'email' => 'abdonc@gmail.com',
             'password' => Hash::make('1308864642'),
             'person_id' => '2',
         ]);
 
         DB::table('users')->insert([
-            'user' => 'fgarcia0705',
+            'user' => 'fgarcia05',
             'email' => 'fannygarciab@hotmail.es',
             'password' => Hash::make('1308050705'),
             'person_id' => '3',
         ]);
 
         DB::table('users')->insert([
-            'user' => 'evillarreal0101',
+            'user' => 'evillarreal01',
             'email' => 'evillarreal@consorciolinea1.com',
             'password' => Hash::make('1701010101'),
             'person_id' => '4',

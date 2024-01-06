@@ -72,13 +72,15 @@ class StateController extends Controller
         }
     }
 
-
-    public function getCities(Request $request, $id)
+    public function getStates(Request $request, $id)
     {
         if($request->ajax())
         {
-            $cities = City::where('city_id',$id)->get();
-            return response()->json($cities);
+            $states = State::where('country_id',$id)->orderBy('name')->get();
+            return response()->json($states);
         }
     }
+
+
+    
 }

@@ -27,8 +27,7 @@ class CreateStakeholdersTable extends Migration
             $table->string('phoneNumber')->nullable();
             $table->string('email');
             $table->string('logofile')->default('noPhoto.png');
-            $table->foreignId('stakeholder_type_id');
-            $table->foreign('stakeholder_type_id')->references('id')->on('stakeholder_types')->onUpdate('cascade')->onDelete('restrict');
+            $table->integer('stakeholder_type_id');
             $table->boolean('isActive')->default(true);
             $table->boolean('isLocked')->default(false);
             $table->unique(['name','project_id'],'contractor_project_unique');

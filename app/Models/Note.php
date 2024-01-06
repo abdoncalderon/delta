@@ -20,7 +20,7 @@ class Note extends Model
 
     public function projectUser()
     {
-        return $this->belongsTo(ProjectUser::class);
+        return $this->belongsTo(ProjectUser::class)->with('user');
     }
 
     public function attachments()

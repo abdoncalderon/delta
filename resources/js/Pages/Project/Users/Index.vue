@@ -12,60 +12,78 @@
         </template>
 
         <template #content>
-            <ToolBar
-                :buttons="buttons"
-                @click="clickIconToolBar"
+            <div class="my-2">
+                <ToolBar
+                    :icons="icons"
+                    @click="clickIconToolBar"
+                />
+            </div>
+
+            <List
+                v-if="showList"
+                :projectUsers="projectUsers"
+                @event="getEvent"
             />
-            <DataTable
-                :key="reload"
-                :headers="headers"
-                :actions="actions"
-                :dataset="users"
-                :table="trnsl('content.users')"
-                fieldSearch="name"
-                @select="executeAction"
+
+            <New
+                v-if="showNew"
+                :users="users"
+                :projects="projects"
+                :roles="roles"
+                @event="getEvent"
             />
+
+            <Edit
+                v-if="showEdit"
+                :projectUser="projectUser"
+                :users="users"
+                :projects="projects"
+                :roles="roles"
+                @event="getEvent"
+            />
+            
         </template>
 
+        
+
         <!-- MODAL -->
-        <Modal
+        <!-- <Modal
             :show="modal"
             @close="closeModal"
         >
-            <h3 class="px-5 py-3 font-semibold text-blue-500 bg-gray-100">
+            <h3 class="px-3 py-3 font-semibold text-sm text-white bg-gray-700">
                 {{ title }}
             </h3>
 
             <Form
                 :fields="fields"
                 :form="form"
-                :table="trnsl('content.users')"
                 :routePath="routePath"
                 :operation="operation"
-                @submit="confirmTransaction"
+                @submit="getEvent"
+                :acceptText="trnsl('content.save')"
             />
-        </Modal>
+        </Modal> -->
         
     </AuthenticatedLayout>
 </template>
 
 <script setup>
     import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
-    import DataTable from '@/Components/DataTable.vue'
-    import Form from '@/Components/Form.vue'
-    import Modal from '@/Components/Modal.vue'
+    
+    import New from './New.vue'
+    import List from './List.vue'
+    import Edit from './Edit.vue'
     import ToolBar from '@/Components/ToolBar.vue'
     import { useForm, Head, usePage, router } from '@inertiajs/vue3';
-    import Swal from 'sweetalert2';
     import { trnsl } from '@/Lang/languages';
-    import { successMessage, errorMessage } from '@/Helpers/helper'
-    import { ref, onMounted } from 'vue';
+    import { ref } from 'vue';
 
     const props = defineProps({
-        roles: Array,
-        users: Array,
+        projectUsers: Array,
         projects: Array,
-        people: Array,
+        users: Array,
+        roles: Array,
     });
 
     const page = usePage();
@@ -75,43 +93,22 @@
         'user_id': '',
         'project_id': '',
         'role_id': '',
+        'user': '',
+        'password': '',
+        'email': '',
     });
 
-    const reload = ref(0)
-    const modal = ref(false)
-    const title = ref('');
-    const operation = ref('');
-    const routePath = ref('');
+    const showList = ref(true)
+    const showNew = ref(false)
+    const showEdit = ref(false)
 
-    const headers = [
-                    {name: 'user.person.fullName', text: trnsl('content.user'), type: 'text', align: 'left'},
-                    {name: 'role.name', text: trnsl('content.role'), type: 'text', align: 'left'},
-                ];
+    let projectUser = null
 
-    const actions = [
-                    {name: 'edit', type: 'icon', text: trnsl('content.edit'), icon: 'fa fa-pencil', color: 'primary'},
-                    {name: 'delete', type: 'icon', text: trnsl('content.delete'), icon: 'fa fa-trash', color: 'danger' },
-                ];
-    
-    const fields = [
-                    {name: 'id', type: 'hidden'},
-                    {name: 'project_id', type: 'select', text: trnsl('content.project'), style: 'sm:col-span-4', items:[], disabled: true, preserve: true }, 
-                    {name: 'user_id', type: 'select', text: trnsl('content.user'), style: 'sm:col-span-4', items:[], disabled: false },
-                    {name: 'role_id', type: 'select', text: trnsl('content.role'), style: 'sm:col-span-4', items:[], disabled: false }, 
-                ];
-
-    const buttons = [
-                    {name: 'new', text: trnsl('content.new'), icon: 'fa fa-plus'},
-                    {name: 'exit', text: trnsl('content.exit'), icon: 'fa-solid fa-arrow-up-right-from-square'}
-                ];
-
-    const formReset = () => {
-        fields.forEach( (row, i) => {
-            if (row['preserve']==null) {
-                form.reset(row['name'])
-            }
-        })
-    }
+    const icons = [
+        {name: 'home', text: trnsl('content.home'), icon: 'fa fa-home'},
+        {name: 'new', text: trnsl('content.new'), icon: 'fa fa-plus'},
+        {name: 'list', text: trnsl('content.list'), icon: 'fa fa-table'},
+    ];
 
     const openModal = ( row ) => {
         modal.value = true;
@@ -120,96 +117,75 @@
     const closeModal = () => {
         modal.value = false;
         reload.value += 1;
-        formReset();
+        form.reset()
+        form.clearErrors()
     }
     
     const home = () => {
         router.visit(route('dashboard'))
     } 
 
-    //Delete Record
-    const deleteRecord = (row) => {
-        const alert = Swal.mixin({
-            buttonsStyling:true
-        });
-        alert.fire({
-            toast: true,
-            titleText: row.name,
-            text: trnsl('messages.confirmDelete'),
-            icon: 'question', 
-            showCancelButton:true,
-            confirmButtonText: '<i class="fa fa-check"></i>' + ' ' + trnsl('content.delete'),
-            cancelButtonText: '<i class="fa fa-ban"></i>' + ' ' + trnsl('content.cancel'),
-            showClass: {
-                popup: '',
-                icon: '',
-            },
-        }).then((result) =>{
-            if(result.isConfirmed){
-                form.delete(route('project.users.destroy', row.id),{
-                    onSuccess: () => { 
-                        successMessage(trnsl('messages.recordDeleted'))
-                        reload.value += 1;
-                    },
-                    onError: () => {
-                        errorMessage(trnsl('messages.recordNoDeleted'))
-                    }
-                })
-            }
-        });
-    }
-
-    const executeAction = ( params ) => {
-        if (params[1]==='edit') {
+    /* const getAction = ( action ) => {
+        if (action.name==='edit') {
             operation.value = 'update'
             routePath.value = 'project.users.update'
-            title.value = trnsl('content.edit') + ' ' + trnsl('content.projectUsers')
+            title.value = trnsl('content.edit') + ' ' + trnsl('messages.projectUser')
+            form.id = action.data.id
             fields.forEach( (field) => {
-                form[field.name]=params[0][field.name];
+                form[field.name]=action.data[field.name];
             })
             openModal()
-        } else if (params[1]==='delete') {
-            deleteRecord(params[0])
+        } else if (action.name==='delete') {
+            deleteRecord(action.data)
         }
-    }
+    } */
 
-    const confirmTransaction = ( params ) => {
-        if (params[1]==='store'){
-            if (params[0]==1){
-                successMessage(trnsl('messages.recordSaved'))
+    /* const getEvent = ( event ) => {
+        if (event.action==='store'){
+            if (event.status==1){
                 closeModal()
-            } else {
-                console.log(params[2])
-                errorMessage(trnsl('messages.recordNoSaved'))
             } 
-        } else if ((params[1]==='update')||(params[1]==='updateWithFile')) {
-            if (params[0]==1){
-                successMessage(trnsl('messages.recordUpdated')) 
+        } else if ((event.action==='update')||(event.action==='updateWithFile')) {
+            if (event.status==1){
                 closeModal()
-            } else {
-                errorMessage(trnsl('messages.recordNoUpdated'))
             } 
         } else {
             closeModal()
         }
-    }
+    } */
 
     const clickIconToolBar = (button) => {
         if (button === 'new') {
-            operation.value = 'store'
-            routePath.value = 'project.users.store'
-            title.value = trnsl('content.create') + ' ' + trnsl('content.projectUsers')
-            openModal()
-        } else if (button == 'exit') {
-            home()
-        }
+            showList.value = false
+            showNew.value = true
+            showEdit.value = false
+        } else if (button == 'list') {
+                    showList.value = true
+                    showNew.value = false
+                    showEdit.value = false
+                } else if (button == 'home') {
+                            home()
+                        }
     }
 
-    onMounted(() => {
-        fields[1].items = props.projects;
-        fields[2].items = props.people;
-        fields[3].items = props.roles;
-        form.project_id = page.props.auth.currentProject[0].id
-    }) 
+    const getEvent = ( status ) => {
+        if (status.source === 'new') {
+            showList.value = true
+            showNew.value = false
+            showEdit.value = false
+        } else if (status.source === 'list') {
+                    if (status.status == 1) {
+                        projectUser = status.data
+                        showList.value = false
+                        showNew.value = false
+                        showEdit.value = true
+                    }
+                } else if(status.source === 'edit') {
+                            showList.value = true
+                            showNew.value = false
+                            showEdit.value = false
+                           
+                        }
+    }
 
 </script>

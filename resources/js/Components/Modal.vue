@@ -1,101 +1,65 @@
 <template>
-    <teleport to="body">
-        <transition leave-active-class="duration-200">
-            <div v-show="show" class="fixed inset-0 overflow-y-auto px-4 py-10 sm:px-0 z-50" scroll-region>
-                <transition
-                    enter-active-class="ease-out duration-300"
-                    enter-from-class="opacity-0"
-                    enter-to-class="opacity-100"
-                    leave-active-class="ease-in duration-200"
-                    leave-from-class="opacity-100"
-                    leave-to-class="opacity-0"
-                >
-                    <div v-show="show" class="fixed inset-0 transform transition-all" @click="close">
-                        <div class="absolute inset-0 bg-gray-500 opacity-75" />
-                    </div>
-                </transition>
+    
+    <div v-if="showModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75">
+      <div :style="style" class="m-2 bg-white rounded shadow overflow-hidden">
+        <!-- <div :style="{ 'width': modalWidth, 'height': modalHeight }" class="bg-white rounded shadow overflow-hidden"> -->
+        <!-- Barra de título -->
+        <div class="flex items-center justify-between bg-gray-700 p-2 rounded-t">
+            <div class="flex items-center">
+                
+                <!-- Título de la modal -->
+                <div class="font-semibold text-sm text-white">{{ title }}</div>
 
-                <transition
-                    enter-active-class="ease-out duration-300"
-                    enter-from-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                    enter-to-class="opacity-100 translate-y-0 sm:scale-100"
-                    leave-active-class="ease-in duration-200"
-                    leave-from-class="opacity-100 translate-y-0 sm:scale-100"
-                    leave-to-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                >
-                    <div
-                        v-show="show"
-                        class="mb-6 bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:w-full sm:mx-auto"
-                        :class="maxWidthClass"
-                    >
-                        <slot v-if="show" />
-                    </div>
-                </transition>
             </div>
-        </transition>
-    </teleport>
-</template>
+            <!-- Botón de cerrar -->
+            <button @click="closeModal" class="text-white hover:text-red-500">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
 
-<script setup>
+        <!-- Contenido de la modal -->
+        <slot></slot>
+  
+        <!-- Botón de cerrar la modal -->
+        
+      </div>
+    </div>
+  </template>
+  
+  <script setup>
 
-    import { computed, onMounted, onUnmounted, watch } from 'vue';
+    import { ref } from 'vue';
 
     const props = defineProps({
-        show: {
+        showModal: {
             type: Boolean,
-            default: false,
+            required: true,
         },
-        maxWidth: {
+        title: {
             type: String,
-            default: '2xl',
+            default: 'My Window',
         },
-        closeable: {
-            type: Boolean,
-            default: true,
+        modalWidth: {
+            type: String,
+            default: 'auto',
         },
-    });
+        modalHeight: {
+            type: String,
+            default: 'auto',
+        },
+    })
 
-    const emit = defineEmits(['close']);
+    const emit = defineEmits(['closeModal'])
 
-    watch(
-        () => props.show,
-        () => {
-            if (props.show) {
-                document.body.style.overflow = 'hidden';
-            } else {
-                document.body.style.overflow = null;
-            }
-        }
-    );
-
-    const close = () => {
-        if (props.closeable) {
-            emit('close');
-        }
+    const closeModal = () => {
+        emit('closeModal');
     };
 
-    const closeOnEscape = (e) => {
-        if (e.key === 'Escape' && props.show) {
-            close();
-        }
-    };
-
-    onMounted(() => document.addEventListener('keydown', closeOnEscape));
-
-    onUnmounted(() => {
-        document.removeEventListener('keydown', closeOnEscape);
-        document.body.style.overflow = null;
-    });
-
-    const maxWidthClass = computed(() => {
-        return {
-            sm: 'sm:max-w-sm',
-            md: 'sm:max-w-md',
-            lg: 'sm:max-w-lg',
-            xl: 'sm:max-w-xl',
-            '2xl': 'sm:max-w-2xl',
-        }[props.maxWidth];
-    });
-</script>
-
-
+    const style = {
+        'width': props.modalWidth,
+        'height': props.modalHeight
+    }
+  
+  </script>
+  
+  

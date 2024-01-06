@@ -16,9 +16,11 @@ class Stakeholder extends Model
         return $this->belongsTo(City::class);
     }
 
-    public function stakeholderType(){
-        return $this->belongsTo(StakeholderType::class);
+    public function people(){
+        
     }
+
+    
 
     
 }

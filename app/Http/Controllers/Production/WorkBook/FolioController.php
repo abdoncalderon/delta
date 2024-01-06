@@ -18,12 +18,12 @@ class FolioController extends Controller
     public function index() {
         $locations = LocationProjectUser::select('locations.id as id','locations.name as name')
                     ->join('locations','location_project_users.location_id','=','locations.id')
-                    ->where('project_user_id',session('currentProjectUserId'))
+                    ->where('project_user_id',session('current_project_user')->id)
                     ->get();
         
         return Inertia::render('Production/WorkBook/Folios/Index', [
             'locations' => $locations,
-            'projectUserId' => session('currentProjectUserId')
+            'projectUserId' => session('current_project_user')->id
         ]);
     }
 
@@ -38,7 +38,7 @@ class FolioController extends Controller
                         $location->uploadSequence();
                         return redirect()->back();
                     }else{
-                        return back()->withErrors('messages.timeExpiredToOpenFolio');
+                        return back()->withErrors(__('messages.timeExpiredToOpenFolio'));
                     }
                 }else{
                     return back()->withErrors(__('messages.dateOutsideLocationExecution'));
@@ -62,6 +62,7 @@ class FolioController extends Controller
                     ->where('location_id', $location_id)
                     ->whereDate('date','>=', $fromDate)
                     ->whereDate('date','<=', $untilDate)
+                    ->orderBy('date')
                     ->get();
             return response()->json($folios);
         }

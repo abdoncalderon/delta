@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class PurchaseRequestItem extends Model
 {
-    protected $fillable = ['purchase_request_id','need_request_item_id','reference','quantity','unity_id'];
+    protected $fillable = ['purchase_request_id','need_request_item_id','reference','quantity','unity_id', 'attachment'];
 
     public function purchaseRequest()
     {
